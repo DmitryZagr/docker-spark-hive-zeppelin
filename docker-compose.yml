@@ -76,5 +76,3 @@ services:
       - ./conf/zeppelin/interpreter.json:/zeppelin/conf/interpreter.json
       - ./data/zeppelin/logs:/logs
       - ./data/zeppelin/notebook:/notebook
-    depends_on:
-      - spark-master
