@@ -1,0 +1,131 @@
+version: "3.3"
+
+services:
+
+  namenode:
+    image: bde2020/hadoop-namenode:1.2.1-hadoop2.8.1-java8
+    hostname: namenode
+    volumes:
+      - namenode_data:/hadoop/dfs/name
+    environment:
+      - CLUSTER_NAME=test
+    env_file:
+      - ./hadoop-hive.env
+    # deploy:
+    #   placement:
+    #     constraints: 
+    #       - node.role==manager
+
+  datanode:
+    image: bde2020/hadoop-datanode:1.2.1-hadoop2.8.1-java8
+    volumes:
+      - datanode_data:/hadoop/dfs/data
+    env_file:
+      - ./hadoop-hive.env
+    depends_on:
+      - namenode
+    # deploy:
+    #   placement:
+    #     constraints: 
+    #       - node.disk==ssd
+
+  spark-master:
+    image: bde2020/spark-master:2.1.1-hadoop2.8.1-hive-java8
+    hostname: spark-master
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./hadoop-hive.env
+    depends_on:
+      - namenode
+      - datanode
+    # deploy:
+    #   placement:
+    #     constraints: 
+    #       - node.role==manager
+
+  spark-worker:
+    image: bde2020/spark-worker:2.1.1-hadoop2.8.1-hive-java8
+    environment:
+      - "SPARK_MASTER=spark://spark-master:7077"
+    env_file:
+      - ./hadoop-hive.env
+    deploy:
+      placement:
+        constraints: 
+          - node.role==worker
+
+  hive-server:
+    image: zagrebaev/hadoop-hive:2.2.0-hadoop2.8.1-java8
+    hostname: hive-server
+    env_file:
+      - ./hadoop-hive.env
+    environment:
+      - "HIVE_CORE_CONF_javax_jdo_option_ConnectionURL=jdbc:postgresql://hive-metastore/metastore"
+    depends_on:
+      - namenode
+      - hive-metastore
+    deploy:
+      placement:
+        constraints: 
+          - node.role==manager
+
+  hive-metastore:
+    image: zagrebaev/hadoop-hive:2.2.0-hadoop2.8.1-java8
+    hostname: hive-metastore
+    env_file:
+      - ./hadoop-hive.env
+    command: /opt/hive/bin/hive --service metastore
+    depends_on:
+      - hive-metastore-postgresql
+    deploy:
+      placement:
+        constraints: 
+          - node.disk==ssd
+          - node.disk.type==hive-metastore
+
+  hive-metastore-postgresql:
+    image: bde2020/hive-metastore-postgresql:2.2.0-hadoop2.8.1-java8
+    hostname: hive-metastore-postgresql
+    volumes:
+      - hive-metastore-postgresql_data:/var/lib/postgresql/data
+    deploy:
+      placement:
+        constraints: 
+          - node.role==manager
+
+  zeppelin:
+    image: apache/zeppelin:0.7.2
+    ports:
+      - 8081:8080
+    environment:
+      - ZEPPELIN_LOG_DIR=/logs
+      - ZEPPELIN_NOTEBOOK_DIR=/notebook
+    volumes:
+      # - ./conf/zeppelin/interpreter.json:/zeppelin/conf/interpreter.json
+      - zeppelin_data-logs:/logs
+      - zeppelin_data-notebook:/notebook
+    deploy:
+      placement:
+        constraints: 
+          - node.role==manager
+
+  # visualizer:
+  #   image: manomarks/visualizer
+  #   ports:
+  #     - "8082:8080"
+  #   stop_grace_period: 1m30s
+  #   volumes:
+  #     - "/var/run/docker.sock:/var/run/docker.sock"
+
+volumes:
+    namenode_data:
+    datanode_data:
+    zeppelin_data-logs:
+    zeppelin_data-notebook:
+    hive-metastore-postgresql_data:
+
+
+
+
+
