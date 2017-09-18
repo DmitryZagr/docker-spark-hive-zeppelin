@@ -11,10 +11,10 @@ services:
       - CLUSTER_NAME=test
     env_file:
       - ./hadoop-hive.env
-    # deploy:
-    #   placement:
-    #     constraints: 
-    #       - node.role==manager
+    deploy:
+      placement:
+        constraints: 
+          - node.role == manager
 
   datanode:
     image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
@@ -24,10 +24,11 @@ services:
       - ./hadoop-hive.env
     depends_on:
       - namenode
-    # deploy:
-    #   placement:
-    #     constraints: 
-    #       - node.disk==ssd
+    deploy:
+      placement:
+        constraints: 
+          - node.role == worker
+          - node.disk == ssd
 
   spark-master:
     image: dmitryzagr/spark-master:2.1.1-hadoop2.8.1-hive-java8
@@ -39,10 +40,10 @@ services:
     depends_on:
       - namenode
       - datanode
-    # deploy:
-    #   placement:
-    #     constraints: 
-    #       - node.role==manager
+    deploy:
+      placement:
+        constraints: 
+          - node.role == manager
 
   spark-worker:
     image: dmitryzagr/spark-worker:2.1.1-hadoop2.8.1-hive-java8
@@ -53,7 +54,7 @@ services:
     deploy:
       placement:
         constraints: 
-          - node.role==worker
+          - node.role == worker
 
   hive-server:
     image: dmitryzagr/hadoop-hive:2.2.0-hadoop2.8.1-java8
@@ -68,7 +69,7 @@ services:
     deploy:
       placement:
         constraints: 
-          - node.role==manager
+          - node.role == manager
 
   hive-metastore:
     image: dmitryzagr/hadoop-hive:2.2.0-hadoop2.8.1-java8
@@ -81,8 +82,9 @@ services:
     deploy:
       placement:
         constraints: 
-          - node.disk==ssd
-          - node.disk.type==hive-metastore
+          - node.role == worker
+          - disk == ssd
+          - disk.type == hive-metastore
 
   hive-metastore-postgresql:
     image: dmitryzagr/hive-metastore-postgresql:2.2.0-hadoop2.8.1-java8
@@ -92,7 +94,7 @@ services:
     deploy:
       placement:
         constraints: 
-          - node.role==manager
+          - node.role == manager
 
   zeppelin:
     image: apache/zeppelin:0.7.2
@@ -102,13 +104,13 @@ services:
       - ZEPPELIN_LOG_DIR=/logs
       - ZEPPELIN_NOTEBOOK_DIR=/notebook
     volumes:
-      # - ./conf/zeppelin/interpreter.json:/zeppelin/conf/interpreter.json
+       - ./conf/zeppelin/interpreter.json:/zeppelin/conf/interpreter.json
       - zeppelin_data-logs:/logs
       - zeppelin_data-notebook:/notebook
     deploy:
       placement:
         constraints: 
-          - node.role==manager
+          - node.role == manager
 
   visualizer:
     image: dockersamples/visualizer
@@ -117,6 +119,10 @@ services:
     stop_grace_period: 1m30s
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: 
+          - node.role == manager
 
 volumes:
     namenode_data:
