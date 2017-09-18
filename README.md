@@ -10,33 +10,12 @@
 
 ## Подготовка
 
-#### Собрать базовый образ hadoop 2.8.1
-```sh
-git clone https://github.com/DmitryZagr/docker-hadoop.git
-git checkout al_1.2.1-hadoop2.8.1-java8
-make build-local
-```
-####  Собрать образ hive 2.2.0
-```sh
-git clone https://github.com/DmitryZagr/docker-hive.git
-git checkout hive_2.2.0
-make build-local
-```
-#### Собрать мета хранилище на основе PostgreSQL для Hive 2.2.0
-```sh
-git clone https://github.com/DmitryZagr/docker-hive-metastore-postgresql.git
-git checkout 2.2.0
-make build-local
-```
-####  Собрать образ Spark 2.1.1
-```sh
-git clone https://github.com/DmitryZagr/docker-spark.git
-git checkout al_spark2.2.0-hadoop2.8.1-hive-java8
-make build
-```
+#### Настроить ноды в соостветсвии с docker-stack.yml
+Необходимо прописать labels
 
-## Запук системы на одной машине
+#### Запук системы
 ```sh
 git clone https://github.com/DmitryZagr/docker-spark-hive-zeppelin.git
-docker-compose down && docker-compose up
+cd docker-spark-hive-zeppelin
+docker stack  deploy -c docker-stack.yml hadoop
 ```
