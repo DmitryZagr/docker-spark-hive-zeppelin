@@ -28,7 +28,7 @@ services:
       placement:
         constraints: 
           - node.role == worker
-          - node.disk == ssd
+          - disk == ssd
 
   spark-master:
     image: dmitryzagr/spark-master:2.1.1-hadoop2.8.1-hive-java8
