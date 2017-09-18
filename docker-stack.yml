@@ -104,7 +104,7 @@ services:
       - ZEPPELIN_LOG_DIR=/logs
       - ZEPPELIN_NOTEBOOK_DIR=/notebook
     volumes:
-       - ./conf/zeppelin/interpreter.json:/zeppelin/conf/interpreter.json
+      - ./conf/zeppelin/interpreter.json:/zeppelin/conf/interpreter.json
       - zeppelin_data-logs:/logs
       - zeppelin_data-notebook:/notebook
     deploy:
