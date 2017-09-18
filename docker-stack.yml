@@ -3,7 +3,7 @@ version: "3.3"
 services:
 
   namenode:
-    image: bde2020/hadoop-namenode:1.2.1-hadoop2.8.1-java8
+    image: dmitryzagr/hadoop-namenode:1.2.1-hadoop2.8.1-java8
     hostname: namenode
     volumes:
       - namenode_data:/hadoop/dfs/name
@@ -17,7 +17,7 @@ services:
     #       - node.role==manager
 
   datanode:
-    image: bde2020/hadoop-datanode:1.2.1-hadoop2.8.1-java8
+    image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
     volumes:
       - datanode_data:/hadoop/dfs/data
     env_file:
@@ -30,7 +30,7 @@ services:
     #       - node.disk==ssd
 
   spark-master:
-    image: bde2020/spark-master:2.1.1-hadoop2.8.1-hive-java8
+    image: dmitryzagr/spark-master:2.1.1-hadoop2.8.1-hive-java8
     hostname: spark-master
     ports:
       - "8080:8080"
@@ -45,7 +45,7 @@ services:
     #       - node.role==manager
 
   spark-worker:
-    image: bde2020/spark-worker:2.1.1-hadoop2.8.1-hive-java8
+    image: dmitryzagr/spark-worker:2.1.1-hadoop2.8.1-hive-java8
     environment:
       - "SPARK_MASTER=spark://spark-master:7077"
     env_file:
@@ -56,7 +56,7 @@ services:
           - node.role==worker
 
   hive-server:
-    image: zagrebaev/hadoop-hive:2.2.0-hadoop2.8.1-java8
+    image: dmitryzagr/hadoop-hive:2.2.0-hadoop2.8.1-java8
     hostname: hive-server
     env_file:
       - ./hadoop-hive.env
@@ -71,7 +71,7 @@ services:
           - node.role==manager
 
   hive-metastore:
-    image: zagrebaev/hadoop-hive:2.2.0-hadoop2.8.1-java8
+    image: dmitryzagr/hadoop-hive:2.2.0-hadoop2.8.1-java8
     hostname: hive-metastore
     env_file:
       - ./hadoop-hive.env
@@ -85,7 +85,7 @@ services:
           - node.disk.type==hive-metastore
 
   hive-metastore-postgresql:
-    image: bde2020/hive-metastore-postgresql:2.2.0-hadoop2.8.1-java8
+    image: dmitryzagr/hive-metastore-postgresql:2.2.0-hadoop2.8.1-java8
     hostname: hive-metastore-postgresql
     volumes:
       - hive-metastore-postgresql_data:/var/lib/postgresql/data
