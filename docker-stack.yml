@@ -28,7 +28,7 @@ services:
       placement:
         constraints: 
           - node.role == worker
-          - disk == ssd
+          - node.labels.disk == ssd
 
   spark-master:
     image: dmitryzagr/spark-master:2.1.1-hadoop2.8.1-hive-java8
@@ -82,9 +82,7 @@ services:
     deploy:
       placement:
         constraints: 
-          - node.role == worker
-          - disk == ssd
-          - disk.type == hive-metastore
+          - node.role == manager
 
   hive-metastore-postgresql:
     image: dmitryzagr/hive-metastore-postgresql:2.2.0-hadoop2.8.1-java8
@@ -94,7 +92,9 @@ services:
     deploy:
       placement:
         constraints: 
-          - node.role == manager
+          - node.role == worker
+          - node.labels.disk == ssd
+          - node.labels.disk.type == hive-metastore
 
   zeppelin:
     image: apache/zeppelin:0.7.2
