@@ -36,8 +36,22 @@ docker node update --label-add disk.type=hive-metastore <host-id>
 
 
 #### Запук системы
+
+ Запуск hadoop кластера
 ```sh
 git clone https://github.com/DmitryZagr/docker-spark-hive-zeppelin.git
 cd docker-spark-hive-zeppelin
 docker stack  deploy -c docker-stack.yml hadoop
 ```
+
+Запуск сервисов мониторинга
+```sh
+docker stack  deploy -c docker-stack-monitor.yml monitor
+```
+
+## Литература
+#### Docker
+[Развертывание сервисов через *.yml файлы](http://training.play-with-docker.com/traefik-load-balancing/)
+[Типы labels в swarm](https://docs.docker.com/engine/reference/commandline/service_create/#specify-service-constraints-constraint)
+#### Мониторинг
+[Настройка сервисов мониторинга swarm кластера](https://habrahabr.ru/company/southbridge/blog/327670/)
