@@ -44,7 +44,7 @@ cd docker-spark-hive-zeppelin
 docker stack  deploy -c docker-stack.yml hadoop
 ```
 
-Запуск сервисов мониторинга
+Запуск сервисов мониторинга 
 ```sh
 docker stack  deploy -c docker-stack-monitor.yml monitor
 ```
@@ -54,4 +54,5 @@ docker stack  deploy -c docker-stack-monitor.yml monitor
 [Развертывание сервисов через *.yml файлы](http://training.play-with-docker.com/traefik-load-balancing/)
 [Типы labels в swarm](https://docs.docker.com/engine/reference/commandline/service_create/#specify-service-constraints-constraint)
 #### Мониторинг
+[Репозиторий](https://github.com/botleg/swarm-monitoring.git)
 [Настройка сервисов мониторинга swarm кластера](https://habrahabr.ru/company/southbridge/blog/327670/)
