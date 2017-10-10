@@ -25,6 +25,7 @@ services:
     depends_on:
       - namenode
     deploy:
+      mode: global
       placement:
         constraints: 
           - node.role == worker
@@ -41,6 +42,7 @@ services:
       - namenode
       - datanode
     deploy:
+      replicas: 2
       placement:
         constraints: 
           - node.role == manager
@@ -130,6 +132,14 @@ volumes:
     zeppelin_data-logs:
     zeppelin_data-notebook:
     hive-metastore-postgresql_data:
+
+networks:
+  hadoop:
+    driver: overlay
+    ipam:
+      driver: default
+      config:
+      - subnet: 10.1.0.0/24
 
 
 
