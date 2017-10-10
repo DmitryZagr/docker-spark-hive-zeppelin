@@ -42,7 +42,6 @@ services:
       - namenode
       - datanode
     deploy:
-      replicas: 2
       placement:
         constraints: 
           - node.role == manager
@@ -54,6 +53,7 @@ services:
     env_file:
       - ./hadoop-hive.env
     deploy:
+      replicas: 2
       placement:
         constraints: 
           - node.role == worker
