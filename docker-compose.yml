@@ -18,7 +18,7 @@ services:
     image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
     volumes:
       - ./data/datanode_1:/hadoop/dfs/data
-      - ./buff/:/root/hadoop_data
+      - ./archives/:/root/hadoop_data
     env_file:
       - ./hadoop-hive.env
     depends_on:
@@ -28,7 +28,7 @@ services:
     image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
     volumes:
       - ./data/datanode_2:/hadoop/dfs/data
-      - ./buff/:/root/hadoop_data
+      - ./archives/:/root/hadoop_data
     env_file:
       - ./hadoop-hive.env
     depends_on:

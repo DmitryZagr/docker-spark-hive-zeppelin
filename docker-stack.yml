@@ -20,7 +20,7 @@ services:
     image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
     volumes:
       - datanode_data_1:/hadoop/dfs/data
-      - datanode_buff:/root/hadoop_data
+      - datanode_archives:/root/hadoop_data
     env_file:
       - ./hadoop-hive.env
     depends_on:
@@ -36,7 +36,7 @@ services:
     image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
     volumes:
       - datanode_data_2:/hadoop/dfs/data
-      - datanode_buff:/root/hadoop_data
+      - datanode_archives:/root/hadoop_data
     env_file:
       - ./hadoop-hive.env
     depends_on:
@@ -147,7 +147,7 @@ volumes:
     zeppelin_data-logs:
     zeppelin_data-notebook:
     hive-metastore-postgresql_data:
-    datanode_buff: # volume datanode_buff предназначен для загрузки архива
+    datanode_archives: # volume datanode_archives предназначен для загрузки архива
     datanode_data_1:
     datanode_data_2:
 
