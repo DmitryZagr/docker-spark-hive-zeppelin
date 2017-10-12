@@ -16,10 +16,27 @@ services:
         constraints: 
           - node.role == manager
 
-  datanode:
+  datanode_1:
     image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
     volumes:
-      - datanode_data:/hadoop/dfs/data
+      - datanode_data_1:/hadoop/dfs/data
+      - datanode_buff:/root/hadoop_data
+    env_file:
+      - ./hadoop-hive.env
+    depends_on:
+      - namenode
+    deploy:
+      mode: global
+      placement:
+        constraints: 
+          - node.role == worker
+          - node.labels.disk == ssd
+
+  datanode_2:
+    image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
+    volumes:
+      - datanode_data_2:/hadoop/dfs/data
+      - datanode_buff:/root/hadoop_data
     env_file:
       - ./hadoop-hive.env
     depends_on:
@@ -40,7 +57,6 @@ services:
       - ./hadoop-hive.env
     depends_on:
       - namenode
-      - datanode
     deploy:
       placement:
         constraints: 
@@ -123,15 +139,18 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     deploy:
       placement:
-        constraints: 
+        constraints:
           - node.role == manager
 
 volumes:
     namenode_data:
-    datanode_data:
     zeppelin_data-logs:
     zeppelin_data-notebook:
     hive-metastore-postgresql_data:
+    datanode_buff:
+    datanode_data_1:
+    datanode_data_2:
+
 
 networks:
   hadoop:
