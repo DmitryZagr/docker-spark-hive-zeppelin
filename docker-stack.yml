@@ -147,7 +147,7 @@ volumes:
     zeppelin_data-logs:
     zeppelin_data-notebook:
     hive-metastore-postgresql_data:
-    datanode_buff:
+    datanode_buff: # volume datanode_buff предназначен для загрузки архива
     datanode_data_1:
     datanode_data_2:
 
