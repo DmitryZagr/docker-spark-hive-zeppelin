@@ -14,10 +14,21 @@ services:
     env_file:
       - ./hadoop-hive.env
 
-  datanode:
+  datanode_1:
     image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
     volumes:
-      - ./data/datanode:/hadoop/dfs/data
+      - ./data/datanode_1:/hadoop/dfs/data
+      - ./buff/:/root/hadoop_data
+    env_file:
+      - ./hadoop-hive.env
+    depends_on:
+      - namenode
+
+  datanode_2:
+    image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
+    volumes:
+      - ./data/datanode_2:/hadoop/dfs/data
+      - ./buff/:/root/hadoop_data
     env_file:
       - ./hadoop-hive.env
     depends_on:
@@ -32,7 +43,6 @@ services:
       - ./hadoop-hive.env
     depends_on:
       - namenode
-      - datanode
 
   spark-worker:
     image: dmitryzagr/spark-worker:2.1.1-hadoop2.8.1-hive-java8
