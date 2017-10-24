@@ -86,5 +86,8 @@ services:
       - ZEPPELIN_NOTEBOOK_DIR=/notebook
     volumes:
       - ./conf/zeppelin/interpreter.json:/zeppelin/conf/interpreter.json
+      - ./conf/zeppelin/conf/shiro.ini:/zeppelin/conf/shiro.ini
+      - ./conf/zeppelin/conf/zeppelin-site.xml:/zeppelin/conf/zeppelin-site.xml
       - ./data/zeppelin/logs:/logs
       - ./data/zeppelin/notebook:/notebook
+      
