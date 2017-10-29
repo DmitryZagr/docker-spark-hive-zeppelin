@@ -12,7 +12,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./conf/traefik/traefik.toml:/traefik.toml:ro
-      - ./data/traefik/acme:/etc/traefik/acme
+      - data_traefik_acme:/etc/traefik/acme
     deploy:
       placement:
         constraints: 
@@ -191,6 +191,7 @@ volumes:
     datanode_archives: # volume datanode_archives предназначен для загрузки архива
     datanode_data_1:
     datanode_data_2:
+    data_traefik_acme:
 
 
 networks:
