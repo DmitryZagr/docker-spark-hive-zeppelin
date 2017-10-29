@@ -2,6 +2,21 @@ version: "3.3"
 
 services:
 
+  traefik:
+    image: traefik
+    command: --docker --docker.swarmmode --docker.domain=traefik --docker.watch --web --logLevel=DEBUG
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./conf/traefik/traefik.toml:/traefik.toml
+    deploy:
+      placement:
+        constraints: 
+          - node.role == manager
+
   namenode:
     image: dmitryzagr/hadoop-namenode:1.2.1-hadoop2.8.1-java8
     hostname: namenode
@@ -12,6 +27,8 @@ services:
     env_file:
       - ./hadoop-hive.env
     deploy:
+      labels:
+        - "traefik.enable=false"
       placement:
         constraints: 
           - node.role == manager
@@ -27,6 +44,8 @@ services:
       - namenode
     deploy:
       mode: global
+        labels:
+          - "traefik.enable=false"
       placement:
         constraints: 
           - node.role == worker
@@ -43,6 +62,8 @@ services:
       - namenode
     deploy:
       mode: global
+      labels:
+        - "traefik.enable=false"
       placement:
         constraints: 
           - node.role == worker
@@ -51,13 +72,15 @@ services:
   spark-master:
     image: dmitryzagr/spark-master:2.1.1-hadoop2.8.1-hive-java8
     hostname: spark-master
-    ports:
-      - "8080:8080"
+    #ports:
+    #  - "8080:8080"
     env_file:
       - ./hadoop-hive.env
     depends_on:
       - namenode
     deploy:
+      labels:
+        - "traefik.enable=false"
       placement:
         constraints: 
           - node.role == manager
@@ -70,6 +93,8 @@ services:
       - ./hadoop-hive.env
     deploy:
       replicas: 2
+      labels:
+        - "traefik.enable=false"
       placement:
         constraints: 
           - node.role == worker
@@ -84,6 +109,8 @@ services:
     depends_on:
       - namenode
       - hive-metastore
+    labels:
+      - "traefik.enable=false"
     deploy:
       placement:
         constraints: 
@@ -98,6 +125,8 @@ services:
     depends_on:
       - hive-metastore-postgresql
     deploy:
+      labels:
+        - "traefik.enable=false"
       placement:
         constraints: 
           - node.role == manager
@@ -108,16 +137,16 @@ services:
     volumes:
       - hive-metastore-postgresql_data:/var/lib/postgresql/data
     deploy:
+      labels:
+        - "traefik.enable=false"
       placement:
         constraints: 
           - node.role == worker
           - node.labels.disk == ssd
-          - node.labels.disk.type == hive-metastore
+         # - node.labels.disk.type == hive-metastore
 
   zeppelin:
     image: apache/zeppelin:0.7.2
-    ports:
-      - 8081:8080
     environment:
       - ZEPPELIN_LOG_DIR=/logs
       - ZEPPELIN_NOTEBOOK_DIR=/notebook
@@ -126,6 +155,11 @@ services:
       - zeppelin_data-logs:/logs
       - zeppelin_data-notebook:/notebook
     deploy:
+     labels:
+      - "traefik.backend=che"
+      - "traefik.backend.loadbalancer.sticky=true"
+      - "traefik.frontend.rule=PathPrefix:/"
+      - "traefik.port=8080"
       placement:
         constraints: 
           - node.role == manager
