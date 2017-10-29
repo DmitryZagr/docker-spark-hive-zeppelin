@@ -122,7 +122,7 @@ services:
     labels:
      - "traefik.backend=zeppelin"
      - "traefik.backend.loadbalancer.sticky=true"
-     - "traefik.frontend.rule=PathPrefix:/"
-     - traefik.enable=true
+     - "traefik.frontend.rule=PathPrefix:/zeppelin"
+     - "traefik.enable=true"
      - "traefik.port=8080"
       
