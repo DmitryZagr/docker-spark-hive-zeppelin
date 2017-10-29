@@ -11,7 +11,10 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./conf/traefik/traefik.toml:/traefik.toml
+      - ./conf/traefik/traefik.toml:/etc/traefik/traefik.toml:ro
+      - ./data/traefik/acme:/etc/traefik/acme
+    labels:
+      - traefik.enable=false
 
   namenode:
     image: dmitryzagr/hadoop-namenode:1.2.1-hadoop2.8.1-java8
@@ -119,6 +122,6 @@ services:
     labels:
      - "traefik.backend=zeppelin"
      - "traefik.backend.loadbalancer.sticky=true"
-     - "traefik.frontend.rule=PathPrefix:/zeppelin"
+     - "traefik.frontend.rule=PathPrefix:/"
      - "traefik.port=8080"
       
