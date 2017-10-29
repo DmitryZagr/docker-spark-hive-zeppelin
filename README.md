@@ -34,7 +34,6 @@ docker node update --label-add disk.type=hive-metastore <host-id>
           - node.labels.disk.type == hive-metastore
 ```
 
-
 #### Запук системы
 
  Запуск hadoop кластера
@@ -48,6 +47,9 @@ docker stack  deploy -c docker-stack.yml hadoop
 ```sh
 docker stack  deploy -c docker-stack-monitor.yml monitor
 ```
+
+#### Взаимодействие с системой
+Zeppelin Notebook находится на /zeppelin
 
 ## Литература
 #### Docker
