@@ -21,6 +21,8 @@ services:
   namenode:
     image: dmitryzagr/hadoop-namenode:1.2.1-hadoop2.8.1-java8
     hostname: namenode
+    ports:
+      - "50070:50070"
     volumes:
       - namenode_data:/hadoop/dfs/name
     environment:
