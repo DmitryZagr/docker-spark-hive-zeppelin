@@ -44,8 +44,8 @@ services:
       - namenode
     deploy:
       mode: global
-        labels:
-          - "traefik.enable=false"
+      labels:
+        - "traefik.enable=false"
       placement:
         constraints: 
           - node.role == worker
