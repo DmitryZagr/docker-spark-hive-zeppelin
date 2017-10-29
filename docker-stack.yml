@@ -150,6 +150,7 @@ services:
     environment:
       - ZEPPELIN_LOG_DIR=/logs
       - ZEPPELIN_NOTEBOOK_DIR=/notebook
+      - ZEPPELIN_SERVER_CONTEXT_PATH=/zeppelin
     volumes:
       - ./conf/zeppelin/interpreter.json:/zeppelin/conf/interpreter.json
       - zeppelin_data-logs:/logs
@@ -158,7 +159,7 @@ services:
       labels:
         - "traefik.backend=zeppelin"
         - "traefik.backend.loadbalancer.sticky=true"
-        - "traefik.frontend.rule=PathPrefix:/"
+        - "traefik.frontend.rule=PathPrefix:/zeppelin"
         - "traefik.port=8080"
       placement:
         constraints: 
