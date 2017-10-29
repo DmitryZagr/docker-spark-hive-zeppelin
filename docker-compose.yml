@@ -2,6 +2,17 @@ version: "3.3"
 
 services:
 
+  traefik:
+    image: traefik
+    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./conf/traefik/traefik.toml:/traefik.toml
+
   namenode:
     image: dmitryzagr/hadoop-namenode:1.2.1-hadoop2.8.1-java8
     hostname: namenode
@@ -13,6 +24,8 @@ services:
       - CLUSTER_NAME=test
     env_file:
       - ./hadoop-hive.env
+    labels:
+      - traefik.enable=false
 
   datanode_1:
     image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
@@ -23,6 +36,8 @@ services:
       - ./hadoop-hive.env
     depends_on:
       - namenode
+    labels:
+      - traefik.enable=false
 
   datanode_2:
     image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
@@ -33,16 +48,20 @@ services:
       - ./hadoop-hive.env
     depends_on:
       - namenode
+    labels:
+      - traefik.enable=false
 
   spark-master:
     image: dmitryzagr/spark-master:2.1.1-hadoop2.8.1-hive-java8
     hostname: spark-master
-    ports:
-      - "8080:8080"
+    #ports:
+    #  - "8080:8080"
     env_file:
       - ./hadoop-hive.env
     depends_on:
       - namenode
+    labels:
+      - traefik.enable=false
 
   spark-worker:
     image: dmitryzagr/spark-worker:2.1.1-hadoop2.8.1-hive-java8
@@ -50,6 +69,8 @@ services:
       - "SPARK_MASTER=spark://spark-master:7077"
     env_file:
       - ./hadoop-hive.env
+    labels:
+      - traefik.enable=false
 
   hive-server:
     image: dmitryzagr/hadoop-hive:2.2.0-hadoop2.8.1-java8
@@ -61,6 +82,8 @@ services:
     depends_on:
       - namenode
       - hive-metastore
+    labels:
+      - traefik.enable=false
 
   hive-metastore:
     image: dmitryzagr/hadoop-hive:2.2.0-hadoop2.8.1-java8
@@ -70,17 +93,19 @@ services:
     command: /opt/hive/bin/hive --service metastore
     depends_on:
       - hive-metastore-postgresql
+    labels:
+      - traefik.enable=false
 
   hive-metastore-postgresql:
     image: dmitryzagr/hive-metastore-postgresql:2.2.0-hadoop2.8.1-java8
     hostname: hive-metastore-postgresql
     volumes:
       - ./data/postgresql:/var/lib/postgresql/data
+    labels:
+      - traefik.enable=false
 
   zeppelin:
     image: apache/zeppelin:0.7.2
-    ports:
-      - 8081:8080
     environment:
       - ZEPPELIN_LOG_DIR=/logs
       - ZEPPELIN_NOTEBOOK_DIR=/notebook
@@ -90,4 +115,9 @@ services:
       - ./conf/zeppelin/conf/zeppelin-site.xml:/zeppelin/conf/zeppelin-site.xml
       - ./data/zeppelin/logs:/logs
       - ./data/zeppelin/notebook:/notebook
+    labels:
+     - "traefik.backend=zeppelin"
+     - "traefik.backend.loadbalancer.sticky=true"
+     - "traefik.frontend.rule=PathPrefix:/"
+     - "traefik.port=8080"
       
