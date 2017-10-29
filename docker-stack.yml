@@ -153,6 +153,8 @@ services:
       - ZEPPELIN_SERVER_CONTEXT_PATH=/zeppelin
     volumes:
       - ./conf/zeppelin/interpreter.json:/zeppelin/conf/interpreter.json
+      - ./conf/zeppelin/conf/shiro.ini:/zeppelin/conf/shiro.ini
+      - ./conf/zeppelin/conf/zeppelin-site.xml:/zeppelin/conf/zeppelin-site.xml
       - zeppelin_data-logs:/logs
       - zeppelin_data-notebook:/notebook
     deploy:
