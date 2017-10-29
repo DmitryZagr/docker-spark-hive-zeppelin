@@ -11,7 +11,8 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./conf/traefik/traefik.toml:/traefik.toml
+      - ./conf/traefik/traefik.toml:/traefik.toml:ro
+      - ./data/traefik/acme:/etc/traefik/acme
     deploy:
       placement:
         constraints: 
@@ -162,6 +163,7 @@ services:
         - "traefik.backend=zeppelin"
         - "traefik.backend.loadbalancer.sticky=true"
         - "traefik.frontend.rule=PathPrefix:/zeppelin"
+        - "traefik.enable=true"
         - "traefik.port=8080"
       placement:
         constraints: 
