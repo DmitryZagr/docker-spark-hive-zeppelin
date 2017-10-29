@@ -155,11 +155,11 @@ services:
       - zeppelin_data-logs:/logs
       - zeppelin_data-notebook:/notebook
     deploy:
-     labels:
-      - "traefik.backend=che"
-      - "traefik.backend.loadbalancer.sticky=true"
-      - "traefik.frontend.rule=PathPrefix:/"
-      - "traefik.port=8080"
+      labels:
+        - "traefik.backend=zeppelin"
+        - "traefik.backend.loadbalancer.sticky=true"
+        - "traefik.frontend.rule=PathPrefix:/"
+        - "traefik.port=8080"
       placement:
         constraints: 
           - node.role == manager
