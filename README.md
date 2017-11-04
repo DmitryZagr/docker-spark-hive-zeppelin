@@ -2,9 +2,9 @@
 
 # New Features!
 
-  - Spark v.2.1.1
+  - Spark v.2.2.0
   - Hive v.2.2.0
-  - Zeppelin v.0.7.2
+  - Zeppelin v.0.7.3
 
 
 
