@@ -1,0 +1,433 @@
+########################
+# NAMENODE
+########################    
+apiVersion: v1
+kind: Service
+metadata:
+  name: namenode
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 8020
+  selector:
+    app: hadoop
+    tier: namenode
+  clusterIP: None
+---
+apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: namenode
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+      tier: namenode
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: namenode  
+    spec:
+      containers:
+      - image: dmitryzagr/hadoop-namenode:1.2.1-hadoop2.8.1-java8
+        name: namenode
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        ports:
+        - containerPort: 8020
+          name: namenode
+        volumeMounts:
+        - name: namenode-data
+          mountPath: /hadoop/dfs/name
+        - name: namenode-archives
+          mountPath: /root/hadoop_data
+      volumes:
+      - name: namenode-data
+        emptyDir: {}
+      - name: namenode-archives
+        emptyDir: {}
+---
+########################
+# DATANODE
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: datanode
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 50010
+  selector:
+    app: hadoop
+    tier: datanode
+  clusterIP: None
+---
+apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: datanode
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+      tier: datanode
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: datanode
+    spec:
+      containers:
+      - image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
+        name: datanode
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        ports:
+        - containerPort: 50010
+          name: datanode
+        volumeMounts:
+        - name: datanode-data
+          mountPath: /hadoop/dfs/name
+        - name: datanode-archives
+          mountPath: /root/hadoop_data
+      volumes:
+      - name: datanode-data
+        emptyDir: {}
+      - name: datanode-archives
+        emptyDir: {}
+---
+########################
+# SPARK-MASTER
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-master
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 7077
+  selector:
+    app: hadoop
+    tier: spark-master
+  clusterIP: None
+---
+apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: spark-master
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+      tier: spark-master
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: spark-master
+    spec:
+      containers:
+      - image: dmitryzagr/spark-master:2.2.0-hadoop2.8.1-hive-java8
+        name: spark-master
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        ports:
+        - containerPort: 7077
+          name: spark-master
+---
+########################
+# SPARK-WORKER
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-worker
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 41667
+  selector:
+    app: hadoop
+    tier: spark-worker
+  clusterIP: None
+---
+apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: spark-worker
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+      tier: spark-worker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: spark-worker
+    spec:
+      containers:
+      - image: dmitryzagr/spark-worker:2.2.0-hadoop2.8.1-hive-java8
+        name: spark-worker
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        env:
+        - name: SPARK_MASTER
+          value: "spark://spark-master:7077"
+        - name: SPARK_WORKER_PORT
+          value: "41667"
+        ports:
+        - containerPort: 41667
+          name: spark-worker
+---
+########################
+# HIVE-SERVER
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: hive-server
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 10000
+  selector:
+    app: hadoop
+    tier: hive-server
+  clusterIP: None
+---
+apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: hive-server
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+      tier: hive-server
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: hive-server
+    spec:
+      containers:
+      - image: dmitryzagr/hadoop-hive:2.2.0-hadoop2.8.1-java8
+        name: hive-server
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        env:
+        - name: HIVE_CORE_CONF_javax_jdo_option_ConnectionURL
+          value: "jdbc:postgresql://hive-metastore/metastore"
+        ports:
+        - containerPort: 10000
+          name: hive-server
+---
+########################
+# HIVE-METASTORE
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: hive-metastore
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 9083
+  selector:
+    app: hadoop
+    tier: hive-metastore
+  clusterIP: None
+---
+apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: hive-metastore
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+      tier: hive-metastore
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: hive-metastore
+    spec:
+      containers:
+      - image: dmitryzagr/hadoop-hive:2.2.0-hadoop2.8.1-java8
+        name: hive-metastore
+        command: ["/opt/hive/bin/hive"]
+        args: ["--service", "metastore"]
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        ports:
+        - containerPort: 9083
+          name: hive-metastore
+---
+############################
+# HIVE-METASTORE-POSTGRESQL
+############################    
+apiVersion: v1
+kind: Service
+metadata:
+  name: hive-postgresql
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: hadoop
+    tier: hive-postgresql
+  clusterIP: None
+---
+apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: hive-postgresql
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+      tier: hive-postgresql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: hive-postgresql
+    spec:
+      containers:
+      - image: dmitryzagr/hive-metastore-postgresql:2.2.0-hadoop2.8.1-java8
+        name: hive-postgresql
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        ports:
+        - containerPort: 5432
+          name: hive-postgresql
+       # volumeMounts:
+       # - name: hive-postgresql-data
+       #   mountPath: /var/lib/postgresql/data
+     # volumes:
+     # - name: hive-postgresql-data
+     #   emptyDir: {}
+---
+########################
+# ZEPPELIN
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: zeppelin-ui
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+     # protocol: TCP
+  selector:
+    app: hadoop
+    tier: zeppelin-ui
+  externalIPs:
+    - 10.0.2.15
+  type: NodePort
+---
+apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: zeppelin-ui
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+      tier: zeppelin-ui
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: zeppelin-ui
+    spec:
+      containers:
+      - image: apache/zeppelin:0.7.3
+        name: zeppelin-ui
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        env:
+        - name: ZEPPELIN_LOG_DIR
+          value: "/logs"
+        - name: ZEPPELIN_NOTEBOOK_DIR
+          value: "/notebook"
+        - name: ZEPPELIN_SERVER_CONTEXT_PATH
+          value: "/"
+        - name: ZEPPELIN_PORT
+          value: "8080"
+        ports:
+        - containerPort: 8080
+          name: zeppelin
+        volumeMounts:
+        - name: interpreter
+          mountPath: /zeppelin/conf/interpreter.json
+      volumes:
+      - name: interpreter
+        hostPath:
+          path: /home/dz/git/docker-spark-hive-zeppelin/conf/zeppelin/interpreter.json
+          type: File
+---
