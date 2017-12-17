@@ -18,10 +18,10 @@ spec:
   selector:
     app: hadoop
     tier: namenode
-  #clusterIP: None
-  externalIPs:
-   - 10.70.2.104
-  type: NodePort
+  clusterIP: None
+  # externalIPs:
+  #  - 10.70.2.104
+  # type: NodePort
 ---
 apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
 kind: Deployment
@@ -393,13 +393,11 @@ spec:
   ports:
     - port: 8080
       targetPort: 8080
-     # protocol: TCP
+      protocol: TCP
+      name: zeppelin
   selector:
     app: hadoop
     tier: zeppelin-ui
-  externalIPs:
-    - 10.70.2.104
-  type: NodePort
 ---
 apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
 kind: Deployment
@@ -433,7 +431,7 @@ spec:
         - name: ZEPPELIN_NOTEBOOK_DIR
           value: "/notebook"
         - name: ZEPPELIN_SERVER_CONTEXT_PATH
-          value: "/"
+          value: "/zeppelin"
         - name: ZEPPELIN_PORT
           value: "8080"
         ports:
