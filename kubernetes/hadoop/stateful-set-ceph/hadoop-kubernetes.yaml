@@ -152,6 +152,10 @@ metadata:
 spec:
   ports:
     - port: 7077
+      name: spark-master
+    - port: 8080
+      name: spark-master-ui
+      targetPort: 8080
   selector:
     app: hadoop
     tier: spark-master
@@ -185,6 +189,8 @@ spec:
         ports:
         - containerPort: 7077
           name: spark-master
+        - containerPort: 8080
+          name: spark-master-ui
 ---
 ########################
 # SPARK-WORKER
@@ -199,13 +205,14 @@ metadata:
 spec:
   ports:
     - port: 41667
+      name: spark-worker
   selector:
     app: hadoop
     tier: spark-worker
   clusterIP: None
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: spark-worker
   namespace: cephfs
@@ -215,23 +222,25 @@ spec:
   selector:
     matchLabels:
       app: hadoop
-  serviceName: spark-worker
-  replicas: 2
+      tier: spark-worker
+  replicas: 3
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: hadoop
-        tier: spark-worker 
+        tier: spark-worker
     spec:
       containers:
-      - name: spark-worker
-        image: dmitryzagr/spark-worker:2.2.0-hadoop2.8.1-hive-java8
+      - image: dmitryzagr/spark-worker:2.2.0-hadoop2.8.1-hive-java8
+        name: spark-worker
         env:
         envFrom:
           - configMapRef:
               name: hadoop-env
         ports:
-        - containerPort: 7077
+        - containerPort: 41667
           name: spark-worker
 ---
 ########################
@@ -487,4 +496,8 @@ spec:
         backend:
           serviceName: zeppelin-ui
           servicePort: zeppelin
+      - path: /
+        backend:
+          serviceName: spark-master
+          servicePort: spark-master-ui
 ---

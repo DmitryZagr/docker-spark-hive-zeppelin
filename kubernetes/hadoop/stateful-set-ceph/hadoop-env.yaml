@@ -36,3 +36,9 @@ data:
   YARN_CONF_yarn_resourcemanager_resource__tracker_address: "resourcemanager:8031"
 
   CLUSTER_NAME: "test"
+
+# Spark conf
+  SPARK_MASTER: "spark://spark-master:7077"
+  SPARK_WORKER_PORT: "41667"
+  SPARK_WORKER_MEMORY: "2g"
+  SPARK_WORKER_CORES: "2"
