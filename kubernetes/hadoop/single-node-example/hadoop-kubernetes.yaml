@@ -135,6 +135,10 @@ metadata:
 spec:
   ports:
     - port: 7077
+      name: spark-master
+    - port: 8080
+      name: spark-master-ui
+      targetPort: 8080
   selector:
     app: hadoop
     tier: spark-master
@@ -169,6 +173,8 @@ spec:
         ports:
         - containerPort: 7077
           name: spark-master
+        - containerPort: 8080
+          name: spark-master-ui
 ---
 ########################
 # SPARK-WORKER
@@ -456,4 +462,7 @@ spec:
         backend:
           serviceName: zeppelin-ui
           servicePort: zeppelin
+      - path: /
+          serviceName: spark-master
+          servicePort: 8080
 ---
