@@ -216,6 +216,7 @@ spec:
     matchLabels:
       app: hadoop
   serviceName: spark-worker
+  replicas: 2
   template:
     metadata:
       labels:
