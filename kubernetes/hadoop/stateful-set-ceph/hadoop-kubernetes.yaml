@@ -19,10 +19,10 @@ spec:
   selector:
     app: hadoop
     tier: namenode
-  # clusterIP: None
-  externalIPs:
-   - 10.70.2.104
-  type: NodePort
+  clusterIP: None
+  # externalIPs:
+  #  - 10.70.2.104
+  # type: NodePort
 ---
 apiVersion: apps/v1
 kind: StatefulSet
