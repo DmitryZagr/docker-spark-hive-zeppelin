@@ -61,6 +61,12 @@ services:
       - "8989:8080"
     env_file:
       - ./hadoop-hive.env
+    volumes:
+      - ./data/spark-master/init.sh:/opt/hadoop-2.8.1/init.sh
+      - ./conf/ceph/hadoop/core-site.xml:/opt/hadoop-2.8.1/etc/hadoop/core-site.xml
+      - /home/zagrebaev/Dropbox/hadoop/FS/ceph-cluster/ceph.client.admin.keyring:/opt/hadoop-2.8.1/etc/hadoop/ceph.client.admin.keyring
+      - /home/zagrebaev/Dropbox/hadoop/FS/ceph-cluster/admin.secret:/opt/hadoop-2.8.1/etc/hadoop/admin.secret
+      - ./data/spark-master/init.sh:/opt/hadoop-2.8.1/etc/hadoop/init.sh
     depends_on:
       - namenode
     labels:
