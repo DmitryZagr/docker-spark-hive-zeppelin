@@ -17,10 +17,10 @@ services:
       - traefik.enable=false
 
   namenode:
-    image: dmitryzagr/hadoop-namenode:1.2.1-hadoop2.8.1-java8
+    image: dmitryzagr/hadoop-namenode:hadoop3.0.0-java8
     hostname: namenode
     ports:
-      - 50070:50070
+      - 50070:9870
     volumes:
       - ./data/namenode:/hadoop/dfs/name
     environment:
@@ -31,7 +31,7 @@ services:
       - traefik.enable=false
 
   datanode_1:
-    image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
+    image: dmitryzagr/hadoop-datanode:hadoop3.0.0-java8
     volumes:
       - ./data/datanode_1:/hadoop/dfs/data
       - ./data/archives/:/root/hadoop_data
@@ -43,7 +43,7 @@ services:
       - traefik.enable=false
 
   datanode_2:
-    image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
+    image: dmitryzagr/hadoop-datanode:hadoop3.0.0-java8
     volumes:
       - ./data/datanode_2:/hadoop/dfs/data
       - ./data/archives/:/root/hadoop_data
@@ -59,6 +59,9 @@ services:
     hostname: spark-master
     ports:
       - "8989:8080"
+    volumes:
+      - ./conf/hadoop/core-site.xml:/opt/hadoop-2.8.1/etc/hadoop/core-site.xml
+      - ./conf/hadoop/core-site.xml:/etc/hadoop/core-site.xml
     env_file:
       - ./hadoop-hive.env
     depends_on:
@@ -73,6 +76,9 @@ services:
     env_file:
       - ./hadoop-hive.env
       - ./spark.env
+    volumes:
+      - ./conf/hadoop/core-site.xml:/opt/hadoop-2.8.1/etc/hadoop/core-site.xml
+      - ./conf/hadoop/core-site.xml:/etc/hadoop/core-site.xml
     labels:
       - traefik.enable=false
 
