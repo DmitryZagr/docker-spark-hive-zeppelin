@@ -72,7 +72,7 @@
       ],
       "dependencies": [
         {
-          "groupArtifactVersion": "org.apache.spark:spark-core_2.11:2.2.0",
+          "groupArtifactVersion": "org.apache.spark:spark-core_2.11:2.2.1",
           "local": false
         }
       ],
