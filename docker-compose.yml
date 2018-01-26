@@ -83,7 +83,7 @@ services:
       - traefik.enable=false
 
   hive-server:
-    image: dmitryzagr/hadoop-hive:2.2.0-hadoop2.8.1-java8
+    image: dmitryzagr/hadoop-hive:2.3.2-hadoop3.0.0-java8
     hostname: hive-server
     env_file:
       - ./hadoop-hive.env
@@ -96,7 +96,7 @@ services:
       - traefik.enable=false
 
   hive-metastore:
-    image: dmitryzagr/hadoop-hive:2.2.0-hadoop2.8.1-java8
+    image: dmitryzagr/hadoop-hive:2.3.2-hadoop3.0.0-java8
     hostname: hive-metastore
     env_file:
       - ./hadoop-hive.env
@@ -107,7 +107,7 @@ services:
       - traefik.enable=false
 
   hive-metastore-postgresql:
-    image: dmitryzagr/hive-metastore-postgresql:2.2.0-hadoop2.8.1-java8
+    image: dmitryzagr/hive-metastore-postgresql:2.3.2-hadoop3.0.0-java8
     hostname: hive-metastore-postgresql
     volumes:
       - ./data/postgresql:/var/lib/postgresql/data

@@ -425,7 +425,7 @@
         "zeppelin.jdbc.concurrent.max_connection": "10",
         "zeppelin.interpreter.output.limit": "102400"
       },
-      "status": "READY",
+      "status": "DOWNLOADING_DEPENDENCIES",
       "interpreterGroup": [
         {
           "name": "sql",
@@ -439,11 +439,11 @@
       ],
       "dependencies": [
         {
-          "groupArtifactVersion": "org.apache.hive:hive-jdbc:2.2.0",
+          "groupArtifactVersion": "org.apache.hive:hive-jdbc:2.3.2",
           "local": false
         },
         {
-          "groupArtifactVersion": "org.apache.hadoop:hadoop-common:2.8.1",
+          "groupArtifactVersion": "org.apache.hadoop:hadoop-common:3.0.0",
           "local": false,
           "exclusions": []
         }
@@ -933,6 +933,28 @@
       "2CTGF9PDV"
     ],
     "2CU5GA47N": [
+      "2CSHBC35W",
+      "2CVVEXC7G",
+      "2CV48CN9K",
+      "2CSQXG9Y7",
+      "2CVR1CY2G",
+      "2CVJYMHFN",
+      "2CTGPE6TG",
+      "2CVY3NZPZ",
+      "2CUDWJ59J",
+      "2CUK5UV5N",
+      "2CU8M5MSB",
+      "2CU8VNE97",
+      "2CU5VDV1M",
+      "2CSBDYN82",
+      "2CTZ8BKN1",
+      "2CSY35MMM",
+      "2CTYYBCX6",
+      "2CU9F2NNZ",
+      "2CV7QPAQA",
+      "2CTGF9PDV"
+    ],
+    "2D76U8S1W": [
       "2CSHBC35W",
       "2CVVEXC7G",
       "2CV48CN9K",
