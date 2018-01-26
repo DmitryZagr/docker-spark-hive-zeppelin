@@ -12,8 +12,8 @@ spec:
     - port: 8020
       targetPort : 8020
       name: namenode
-    - port: 50070
-      targetPort: 50070
+    - port: 9870
+      targetPort: 9870
       name: ui
   selector:
     app: hadoop
@@ -43,7 +43,7 @@ spec:
         tier: namenode  
     spec:
       containers:
-      - image: dmitryzagr/hadoop-namenode:1.2.1-hadoop2.8.1-java8
+      - image: dmitryzagr/hadoop-namenode:hadoop3.0.0-java8
         name: namenode
         env:
         envFrom:
@@ -52,7 +52,7 @@ spec:
         ports:
         - containerPort: 8020
           name: namenode
-        - containerPort: 50070
+        - containerPort: 9870
           name: ui
         volumeMounts:
         - name: namenode-data
@@ -103,7 +103,7 @@ spec:
         tier: datanode
     spec:
       containers:
-      - image: dmitryzagr/hadoop-datanode:1.2.1-hadoop2.8.1-java8
+      - image: dmitryzagr/hadoop-datanode:hadoop3.0.0-java8
         name: datanode
         env:
         envFrom:
@@ -164,7 +164,7 @@ spec:
         tier: spark-master
     spec:
       containers:
-      - image: dmitryzagr/spark-master:2.2.0-hadoop2.8.1-hive-java8
+      - image: dmitryzagr/spark-master:2.2.1-hadoop3.0.0-java8
         name: spark-master
         env:
         envFrom:
@@ -213,7 +213,7 @@ spec:
         tier: spark-worker
     spec:
       containers:
-      - image: dmitryzagr/spark-worker:2.2.0-hadoop2.8.1-hive-java8
+      - image: dmitryzagr/spark-worker:2.2.1-hadoop3.0.0-java8
         name: spark-worker
         env:
         envFrom:
@@ -268,7 +268,7 @@ spec:
         tier: hive-server
     spec:
       containers:
-      - image: dmitryzagr/hadoop-hive:2.2.0-hadoop2.8.1-java8
+      - image: dmitryzagr/hadoop-hive:2.3.2-hadoop3.0.0-java8
         name: hive-server
         env:
         envFrom:
@@ -321,7 +321,7 @@ spec:
         tier: hive-metastore
     spec:
       containers:
-      - image: dmitryzagr/hadoop-hive:2.2.0-hadoop2.8.1-java8
+      - image: dmitryzagr/hadoop-hive:2.3.2-hadoop3.0.0-java8
         name: hive-metastore
         command: ["/opt/hive/bin/hive"]
         args: ["--service", "metastore"]
@@ -370,7 +370,7 @@ spec:
         tier: hive-postgresql
     spec:
       containers:
-      - image: dmitryzagr/hive-metastore-postgresql:2.2.0-hadoop2.8.1-java8
+      - image: dmitryzagr/hive-metastore-postgresql:2.3.2-hadoop3.0.0-java8
         name: hive-postgresql
         env:
         envFrom:
@@ -425,7 +425,7 @@ spec:
         tier: zeppelin-ui
     spec:
       containers:
-      - image: dmitryzagr/zeppelin:0.7.3
+      - image: dmitryzagr/zeppelin:0.7.3-hadoop3.0.0
         name: zeppelin-ui
         env:
         envFrom:
