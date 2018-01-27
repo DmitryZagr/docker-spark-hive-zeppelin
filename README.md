@@ -2,8 +2,8 @@
 
 # New Features!
 
-  - Spark v.2.2.0
-  - Hive v.2.2.0
+  - Spark v.2.2.1
+  - Hive v.2.3.2
   - Zeppelin v.0.7.3
   - Kubernetes(k8s) support
 
@@ -13,6 +13,10 @@
 You can find single node exampe without persistent volumes in **kubernetes/hadoop/single-node-example**. You can find multi Node example in **kubernetes/hadoop/stateful-set-ceph** with persistent storage based on [CephFS](https://ceph.com/)
 
 ### Prerequisite
+
+#### K8S
+Deploy k8s cluster with **[flannel](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/)** pod network
+
 #### DNS
 If you have your own DNS server then add it to **kubernetes/hadoop/dns/hadoop-dns-config.yaml** file.
 Deploy external DNS servers to cluser.
