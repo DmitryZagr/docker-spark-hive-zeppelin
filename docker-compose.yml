@@ -60,8 +60,7 @@ services:
     ports:
       - "8989:8080"
     volumes:
-      - ./conf/hadoop/core-site.xml:/opt/hadoop-2.8.1/etc/hadoop/core-site.xml
-      - ./conf/hadoop/core-site.xml:/etc/hadoop/core-site.xml
+      - ./conf/zeppelin/conf/hadoop/core-site.xml:/opt/hadoop-3.0.0/etc/hadoop/core-site.xml:ro
     env_file:
       - ./hadoop-hive.env
     depends_on:
@@ -77,8 +76,7 @@ services:
       - ./hadoop-hive.env
       - ./spark.env
     volumes:
-      - ./conf/hadoop/core-site.xml:/opt/hadoop-2.8.1/etc/hadoop/core-site.xml
-      - ./conf/hadoop/core-site.xml:/etc/hadoop/core-site.xml
+      - ./conf/zeppelin/conf/hadoop/core-site.xml:/opt/hadoop-3.0.0/etc/hadoop/core-site.xml:ro
     labels:
       - traefik.enable=false
 
@@ -115,7 +113,7 @@ services:
       - traefik.enable=false
 
   zeppelin:
-    image: apache/zeppelin:0.7.3
+    image: dmitryzagr/zeppelin:0.7.3-hadoop3.0.0
     environment:
       - ZEPPELIN_LOG_DIR=/logs
       - ZEPPELIN_NOTEBOOK_DIR=/notebook
