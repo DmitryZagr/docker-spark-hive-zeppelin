@@ -11,7 +11,7 @@
 
 ## Kubernetes(k8s)
 
-You can find single node exampe without persistent volumes in **kubernetes/hadoop/singlenode-k8s/without-pvc**. 
+You can find single node exampe without persistent volumes in **kubernetes/hadoop/singlenode-k8s/without-pvc**.
 
 You can find single Node example in **kubernetes/hadoop/singlenode-k8s/ceph-pvc** with persistent storage based on [CephFS](https://ceph.com/).
 
@@ -55,7 +55,7 @@ cd kubernetes/hadoop/stateful-set-ceph
 kubectl delete -f hadoop-env.yaml -f hadoop-kubernetes.yaml
 ```
 
-## Docker Swarm
+## Docker Swarm(not supported)
 
 ### Подготовка
 
