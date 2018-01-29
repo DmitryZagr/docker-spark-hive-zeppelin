@@ -1,0 +1,516 @@
+########################
+# NAMENODE
+########################    
+apiVersion: v1
+kind: Service
+metadata:
+  name: namenode
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 8020
+      targetPort : 8020
+      name: namenode
+    - port: 9870
+      targetPort: 9870
+      name: ui
+  selector:
+    app: hadoop
+    tier: namenode
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: namenode
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+  serviceName: namenode
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: namenode  
+    spec:
+      containers:
+      - name: namenode
+        image: dmitryzagr/hadoop-namenode:hadoop3.0.0-java8
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        ports:
+        - containerPort: 8020
+          name: namenode
+        - containerPort: 9870
+          name: ui
+        volumeMounts:
+        - name: namenode-data
+          mountPath: /hadoop/dfs/name
+        - name: namenode-archives
+          mountPath: /root/hadoop_data
+      volumes:
+      - name: namenode-archives
+        emptyDir: {}
+      nodeSelector:
+        server-type: frontend
+  volumeClaimTemplates:
+  - metadata:
+      name: namenode-data
+    spec:
+      storageClassName: cephfs
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi
+---
+########################
+# DATANODE
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: datanode
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 50010
+      targetPort: 50010
+  selector:
+    app: hadoop
+    tier: datanode
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: datanode
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+  serviceName: datanode
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: datanode  
+    spec:
+      containers:
+      - name: datanode
+        image: dmitryzagr/hadoop-datanode:hadoop3.0.0-java8
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        ports:
+        - containerPort: 50010
+          name: datanode
+        volumeMounts:
+        - name: datanode-data
+          mountPath: /hadoop/dfs/data
+        - name: datanode-archives
+          mountPath: /root/hadoop_data
+      volumes:
+      - name: datanode-archives
+        emptyDir: {}
+      nodeSelector:
+        server-type: backend
+  volumeClaimTemplates:
+  - metadata:
+      name: datanode-data
+    spec:
+      storageClassName: cephfs
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi
+---
+########################
+# SPARK-MASTER
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-master
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 7077
+      name: spark-master
+    - port: 8080
+      name: spark-master-ui
+      targetPort: 8080
+  selector:
+    app: hadoop
+    tier: spark-master
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: spark-master
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+  serviceName: spark-master
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: spark-master 
+    spec:
+      containers:
+      - name: spark-master
+        image: dmitryzagr/spark-master:2.2.1-hadoop3.0.0-java8
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        ports:
+        - containerPort: 7077
+          name: spark-master
+        - containerPort: 8080
+          name: spark-master-ui
+      nodeSelector:
+        server-type: frontend
+---
+########################
+# SPARK-WORKER
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-worker
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 41667
+      name: spark-worker
+  selector:
+    app: hadoop
+    tier: spark-worker
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spark-worker
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+      tier: spark-worker
+  replicas: 3
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: spark-worker
+    spec:
+      containers:
+      - image: dmitryzagr/spark-worker:2.2.1-hadoop3.0.0-java8
+        name: spark-worker
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        ports:
+        - containerPort: 41667
+          name: spark-worker
+      nodeSelector:
+        server-type: backend
+---
+########################
+# HIVE-SERVER
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: hive-server
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 10000
+      name: hive-server1
+    - port: 10002
+      name: hive-server2
+  selector:
+    app: hadoop
+    tier: hive-server
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hive-server
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+  serviceName: hive-server
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: hive-server
+    spec:
+      containers:
+      - name: hive-server
+        image: dmitryzagr/hadoop-hive:2.3.2-hadoop3.0.0-java8
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        env:
+        - name: HIVE_CORE_CONF_javax_jdo_option_ConnectionURL
+          value: "jdbc:postgresql://hive-metastore/metastore"
+        ports:
+        - containerPort: 10000
+          name: hive-server1
+        - containerPort: 10002
+          name: hive-server2
+      nodeSelector:
+        server-type: frontend
+---
+########################
+# HIVE-METASTORE
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: hive-metastore
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 9083
+      name: hive-metastore
+  selector:
+    app: hadoop
+    tier: hive-metastore
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hive-metastore
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+  serviceName: hive-metastore
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: hive-metastore
+    spec:
+      containers:
+      - image: dmitryzagr/hadoop-hive:2.3.2-hadoop3.0.0-java8
+        name: hive-metastore
+        command: ["/opt/hive/bin/hive"]
+        args: ["--service", "metastore"]
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        ports:
+        - containerPort: 9083
+          name: hive-metastore
+      nodeSelector:
+        server-type: backend
+---
+############################
+# HIVE-METASTORE-POSTGRESQL
+############################    
+apiVersion: v1
+kind: Service
+metadata:
+  name: hive-postgresql
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: hadoop
+    tier: hive-postgresql
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hive-postgresql
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+  serviceName: hive-postgresql
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: hive-postgresql
+    spec:
+      containers:
+      - image: dmitryzagr/hive-metastore-postgresql:2.3.2-hadoop3.0.0-java8
+        name: hive-postgresql
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        ports:
+        - containerPort: 5432
+          name: hive-postgresql
+        volumeMounts:
+        - name: hive-postgresql-data
+          mountPath: /var/lib/postgresql/data
+      nodeSelector:
+        server-type: backend
+  volumeClaimTemplates:
+  - metadata:
+      name: hive-postgresql-data
+    spec:
+      storageClassName: cephfs
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi
+---
+########################
+# ZEPPELIN
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: zeppelin-ui
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: zeppelin
+  selector:
+    app: hadoop
+    tier: zeppelin-ui
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: zeppelin-ui
+  namespace: cephfs
+  labels:
+    app: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+  serviceName: zeppelin-ui
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        tier: zeppelin-ui
+    spec:
+      containers:
+      - image: dmitryzagr/zeppelin:0.7.3-hadoop3.0.0
+        name: zeppelin-ui
+        env:
+        envFrom:
+          - configMapRef:
+              name: hadoop-env
+        env:
+        - name: ZEPPELIN_LOG_DIR
+          value: "/data-zeppelin/logs"
+        - name: ZEPPELIN_NOTEBOOK_DIR
+          value: "/data-zeppelin/notebook"
+        - name: ZEPPELIN_SERVER_CONTEXT_PATH
+          value: "/zeppelin"
+        - name: ZEPPELIN_PORT
+          value: "8080"
+        ports:
+        - containerPort: 8080
+          name: zeppelin
+        volumeMounts:
+        - name: zeppelin-ui-data
+          mountPath: /data-zeppelin
+      nodeSelector:
+        server-type: frontend
+  volumeClaimTemplates:
+  - metadata:
+      name: zeppelin-ui-data
+    spec:
+      storageClassName: cephfs
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi
+---
+########################
+# TRAEFIK
+########################
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hadoop-statefull-k8s
+  namespace: cephfs
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.rule.type: PathPrefix
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /zeppelin
+        backend:
+          serviceName: zeppelin-ui
+          servicePort: zeppelin
+      - path: /
+        backend:
+          serviceName: spark-master
+          servicePort: spark-master-ui
+---
