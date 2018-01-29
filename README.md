@@ -1,16 +1,21 @@
 # docker-spark-hive-zeppelin
 
-# New Features!
+# Components
 
   - Spark v.2.2.1
   - Hive v.2.3.2
   - Zeppelin v.0.7.3
+  - Hadoop 3.0.0
   - Kubernetes(k8s) support
 
 
 ## Kubernetes(k8s)
 
-You can find single node exampe without persistent volumes in **kubernetes/hadoop/single-node-example**. You can find multi Node example in **kubernetes/hadoop/stateful-set-ceph** with persistent storage based on [CephFS](https://ceph.com/)
+You can find single node exampe without persistent volumes in **kubernetes/hadoop/singlenode-k8s/without-pvc**. 
+
+You can find single Node example in **kubernetes/hadoop/singlenode-k8s/ceph-pvc** with persistent storage based on [CephFS](https://ceph.com/).
+
+You can find multi Node example in **kubernetes/hadoop/multi-node-k8s/ceph-pvc** with persistent storage based on [CephFS](https://ceph.com/).
 
 ### Prerequisite
 
