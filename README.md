@@ -1,6 +1,6 @@
 # docker-spark-hive-zeppelin
 
-# Components
+## Components
 
   - Spark v.2.2.1
   - Hive v.2.3.2
@@ -54,6 +54,21 @@ kubectl create -f hadoop-env.yaml -f hadoop-kubernetes.yaml
 cd kubernetes/hadoop/stateful-set-ceph
 kubectl delete -f hadoop-env.yaml -f hadoop-kubernetes.yaml
 ```
+
+****
+
+## Local setup
+### Prerequisite
+Install [docker-compose](https://docs.docker.com/compose/install/)
+
+### Deploy hadoop on single node
+```sh
+# From repo root dir
+docker-compose down && docker-compose up
+```
+
+
+****
 
 ## Docker Swarm(not supported)
 
