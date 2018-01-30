@@ -72,14 +72,27 @@ spec:
         - name: http
           containerPort: 80
           hostPort: 80
+        - name: https
+          containerPort: 443
+          hostPort: 443
         - name: admin
           containerPort: 8080
+        volumeMounts:
+        - name: traefik-conf
+          mountPath: /etc/traefik
         securityContext:
           privileged: true
         args:
         - -d
         - --web
         - --kubernetes
+      volumes:
+      - name: traefik-conf
+        secret:
+          secretName: traefik-conf
+          items:
+          - key: traefik.toml
+            path: traefik.toml
 ---
 kind: Service
 apiVersion: v1
@@ -93,6 +106,9 @@ spec:
     - protocol: TCP
       port: 80
       name: web
+    - protocol: TCP
+      port: 443
+      name: https
     - protocol: TCP
       port: 8080
       name: admin
