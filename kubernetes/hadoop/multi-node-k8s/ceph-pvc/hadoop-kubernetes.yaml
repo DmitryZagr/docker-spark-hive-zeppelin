@@ -57,13 +57,11 @@ spec:
           mountPath: /hadoop/dfs/name
         - name: namenode-archives
           mountPath: /root/hadoop_data
-      nodeSelector:
-        server-type: namenode
       volumes:
       - name: namenode-archives
         emptyDir: {}
       nodeSelector:
-        server-type: frontend
+        server-type: namenode
   volumeClaimTemplates:
   - metadata:
       name: namenode-data
