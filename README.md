@@ -6,6 +6,7 @@
   - Hive v.2.3.2
   - Zeppelin v.0.7.3
   - Hadoop 3.0.0
+  - Traefik 1.5.1
   - Kubernetes(k8s) support
 
 
@@ -32,10 +33,12 @@ kubectl create -f kubernetes/hadoop/dns/hadoop-dns-config.yaml
 #### Proxy
 Setup proxy to access k8s hadoop components
 ```sh
-cd kubernetes/proxy
+cd kubernetes/proxy/conf
+make create-traefik-conf
+cd ..
 kubectl create -f k8s-ingress-traefik.yaml
 ```
-After installing cluster you can access to Apache Zeppelin with url **/zeppelin**. You can find spark dashboard on root url /.
+After installing cluster you can access to Apache Zeppelin with url **/zeppelin** on port 80 or 443. You can find spark dashboard on root url /. Also you can see traefik dashboard on port 8080.
 
 #### Ceph
 You can find information about setup ceph cluster [here](https://github.com/DmitryZagr/k8s-ceph#k8s-ceph)
