@@ -105,7 +105,7 @@ spec:
     matchLabels:
       app: hadoop
   serviceName: datanode
-  replicas: 2
+  replicas: 5
   template:
     metadata:
       labels:
@@ -228,7 +228,7 @@ spec:
     matchLabels:
       app: hadoop
       tier: spark-worker
-  replicas: 3
+  replicas: 5
   strategy:
     type: Recreate
   template:
