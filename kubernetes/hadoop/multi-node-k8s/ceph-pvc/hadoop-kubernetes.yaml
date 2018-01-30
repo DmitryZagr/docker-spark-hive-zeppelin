@@ -57,6 +57,8 @@ spec:
           mountPath: /hadoop/dfs/name
         - name: namenode-archives
           mountPath: /root/hadoop_data
+      nodeSelector:
+        server-type: namenode
       volumes:
       - name: namenode-archives
         emptyDir: {}
@@ -129,7 +131,7 @@ spec:
       - name: datanode-archives
         emptyDir: {}
       nodeSelector:
-        server-type: backend
+        server-type: datanode
   volumeClaimTemplates:
   - metadata:
       name: datanode-data
@@ -193,7 +195,7 @@ spec:
         - containerPort: 8080
           name: spark-master-ui
       nodeSelector:
-        server-type: frontend
+        server-type: namenode
 ---
 ########################
 # SPARK-WORKER
@@ -246,7 +248,7 @@ spec:
         - containerPort: 41667
           name: spark-worker
       nodeSelector:
-        server-type: backend
+        server-type: datanode
 ---
 ########################
 # HIVE-SERVER
@@ -303,7 +305,7 @@ spec:
         - containerPort: 10002
           name: hive-server2
       nodeSelector:
-        server-type: frontend
+        server-type: namenode
 ---
 ########################
 # HIVE-METASTORE
@@ -355,7 +357,7 @@ spec:
         - containerPort: 9083
           name: hive-metastore
       nodeSelector:
-        server-type: backend
+        server-type: namenode
 ---
 ############################
 # HIVE-METASTORE-POSTGRESQL
@@ -407,7 +409,7 @@ spec:
         - name: hive-postgresql-data
           mountPath: /var/lib/postgresql/data
       nodeSelector:
-        server-type: backend
+        server-type: namenode
   volumeClaimTemplates:
   - metadata:
       name: hive-postgresql-data
@@ -479,7 +481,7 @@ spec:
         - name: zeppelin-ui-data
           mountPath: /data-zeppelin
       nodeSelector:
-        server-type: frontend
+        server-type: namenode
   volumeClaimTemplates:
   - metadata:
       name: zeppelin-ui-data
