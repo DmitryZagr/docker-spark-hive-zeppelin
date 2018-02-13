@@ -6,7 +6,7 @@
   - Hive v.2.3.2
   - Zeppelin v.0.7.3
   - Hadoop 3.0.0
-  - Traefik 1.5.1
+  - Traefik 1.5.2
 
 ## Supported infrastructures
   - Kubernetes(k8s) support
