@@ -7,8 +7,11 @@
   - Zeppelin v.0.7.3
   - Hadoop 3.0.0
   - Traefik 1.5.1
-  - Kubernetes(k8s) support
 
+## Supported infrastructures
+  - Kubernetes(k8s) support
+  - docker-compose
+  - Docker Swarm(not tested long time)
 
 ## Kubernetes(k8s)
 
