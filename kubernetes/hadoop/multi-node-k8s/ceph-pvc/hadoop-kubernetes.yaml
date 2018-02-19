@@ -478,6 +478,15 @@ spec:
         volumeMounts:
         - name: zeppelin-ui-data
           mountPath: /data-zeppelin
+        - name: zeppelin-conf
+          mountPath: /zeppelin/conf
+      volumes:
+      - name: zeppelin-conf
+        secret:
+          secretName: zeppelin-conf
+          items:
+          - key: shiro.ini
+            path: shiro.ini
       nodeSelector:
         server-type: namenode
   volumeClaimTemplates:
