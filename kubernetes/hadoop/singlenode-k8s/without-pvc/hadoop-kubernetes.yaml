@@ -460,6 +460,7 @@ spec:
           serviceName: zeppelin-ui
           servicePort: zeppelin
       - path: /
+        backend:
           serviceName: spark-master
           servicePort: 8080
 ---
