@@ -167,7 +167,7 @@ spec:
         tier: spark-master
     spec:
       containers:
-      - image: dmitryzagr/spark-master:2.2.1-hadoop3.0.0-java8
+      - image: dmitryzagr/spark-master:2.2.0-hadoop3.0.0-java8
         name: spark-master
         env:
         envFrom:
@@ -218,7 +218,7 @@ spec:
         tier: spark-worker
     spec:
       containers:
-      - image: dmitryzagr/spark-worker:2.2.1-hadoop3.0.0-java8
+      - image: dmitryzagr/spark-worker:2.2.0-hadoop3.0.0-java8
         name: spark-worker
         env:
         envFrom:
