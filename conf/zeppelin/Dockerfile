@@ -67,3 +67,12 @@ RUN apt-get update && apt-get install -y libsnappy-dev
 RUN ln -s /usr/lib/x86_64-linux-gnu/libsnappy.so /opt/hadoop-$HADOOP_VERSION/lib/native
 
 ADD conf/hadoop/core-site.xml /opt/hadoop-$HADOOP_VERSION/etc/hadoop/core-site.xml
+
+RUN apt-get update \
+      && apt-get install -y wget \
+      && wget http://apache-mirror.rbc.ru/pub/apache/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.7.tgz \
+      && tar -xvzf spark-2.2.0-bin-hadoop2.7.tgz \
+      && mv spark-2.2.0-bin-hadoop2.7 spark \
+      && rm spark-2.2.0-bin-hadoop2.7.tgz
+
+ENV SPARK_HOME /zeppelin/spark
