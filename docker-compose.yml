@@ -55,7 +55,7 @@ services:
       - traefik.enable=false
 
   spark-master:
-    image: dmitryzagr/spark-master:2.2.1-hadoop3.0.0-java8
+    image: dmitryzagr/spark-master:2.2.0-hadoop3.0.0-java8
     hostname: spark-master
     ports:
       - "8989:8080"
@@ -69,7 +69,7 @@ services:
       - traefik.enable=false
 
   spark-worker:
-    image: dmitryzagr/spark-worker:2.2.1-hadoop3.0.0-java8
+    image: dmitryzagr/spark-worker:2.2.0-hadoop3.0.0-java8
     environment:
       - "SPARK_MASTER=spark://spark-master:7077"
     env_file:
