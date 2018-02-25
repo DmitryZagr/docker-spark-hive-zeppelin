@@ -488,6 +488,10 @@ spec:
           items:
           - key: shiro.ini
             path: shiro.ini
+          - key: interpreter.json
+            path: interpreter.json
+          - key: zeppelin-site.xml
+            path: zeppelin-site.xml
       nodeSelector:
         server-type: namenode
   volumeClaimTemplates:
