@@ -51,6 +51,7 @@ spec:
         - containerPort: 8020
           name: namenode
         - containerPort: 9870
+          hostPort: 9870
           name: ui
         volumeMounts:
         - name: namenode-data
