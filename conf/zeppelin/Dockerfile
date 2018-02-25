@@ -76,3 +76,6 @@ RUN apt-get update \
       && rm spark-2.2.0-bin-hadoop2.7.tgz
 
 ENV SPARK_HOME /zeppelin/spark
+
+COPY conf/zeppelin-site.xml /zeppelin/conf/zeppelin-site.xml
+COPY interpreter.json /zeppelin/conf/interpreter.json
