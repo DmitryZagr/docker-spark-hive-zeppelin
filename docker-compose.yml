@@ -3,7 +3,7 @@ version: "3.3"
 services:
 
   traefik:
-    image: traefik:1.5.2
+    image: traefik:1.5.3
     command: --web --docker --docker.domain=docker.localhost #--logLevel=DEBUG
     ports:
       - "80:80"
