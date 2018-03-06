@@ -401,6 +401,13 @@ spec:
         envFrom:
           - configMapRef:
               name: hadoop-env
+        env:
+        - name: POSTGRESQL_PASSWORD
+          value: "keycloak"
+        - name: POSTGRESQL_USER
+          value: "keycloak"
+        - name: POSTGRESQL_DATABASE
+          value: "keycloak"
         ports:
         - containerPort: 5432
           name: hive-postgresql
