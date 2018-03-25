@@ -5,6 +5,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: namenode
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -24,6 +25,7 @@ apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
 kind: Deployment
 metadata:
   name: namenode
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -37,7 +39,7 @@ spec:
     metadata:
       labels:
         app: hadoop
-        tier: namenode  
+        tier: namenode
     spec:
       containers:
       - image: dmitryzagr/hadoop-namenode:hadoop3.0.0-java8
@@ -69,6 +71,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: datanode
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -84,6 +87,7 @@ apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
 kind: Deployment
 metadata:
   name: datanode
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -127,6 +131,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: spark-master
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -145,6 +150,7 @@ apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
 kind: Deployment
 metadata:
   name: spark-master
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -161,7 +167,7 @@ spec:
         tier: spark-master
     spec:
       containers:
-      - image: dmitryzagr/spark-master:2.2.1-hadoop3.0.0-java8
+      - image: dmitryzagr/spark-master:2.2.0-hadoop3.0.0-java8
         name: spark-master
         env:
         envFrom:
@@ -180,6 +186,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: spark-worker
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -194,6 +201,7 @@ apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
 kind: Deployment
 metadata:
   name: spark-worker
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -210,7 +218,7 @@ spec:
         tier: spark-worker
     spec:
       containers:
-      - image: dmitryzagr/spark-worker:2.2.1-hadoop3.0.0-java8
+      - image: dmitryzagr/spark-worker:2.2.0-hadoop3.0.0-java8
         name: spark-worker
         env:
         envFrom:
@@ -232,6 +240,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hive-server
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -249,6 +258,7 @@ apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
 kind: Deployment
 metadata:
   name: hive-server
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -287,6 +297,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hive-metastore
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -302,6 +313,7 @@ apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
 kind: Deployment
 metadata:
   name: hive-metastore
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -337,6 +349,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hive-postgresql
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -351,6 +364,7 @@ apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
 kind: Deployment
 metadata:
   name: hive-postgresql
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -390,6 +404,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: zeppelin-ui
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -406,6 +421,7 @@ apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
 kind: Deployment
 metadata:
   name: zeppelin-ui
+  namespace: cephfs
   labels:
     app: hadoop
 spec:
@@ -448,6 +464,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: hadoop-k8s
+  namespace: cephfs
   annotations:
     kubernetes.io/ingress.class: traefik
     traefik.frontend.rule.type: PathPrefix

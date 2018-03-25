@@ -44,7 +44,7 @@ email = "test@traefik.io"
 #  - mount the folder containing the file as a volume
 #      storageFile = "/etc/traefik/acme/acme.json"
 #      $ docker run -v "/my/host/acme:/etc/traefik/acme" traefik
-storageFile = "/etc/traefik/acme.json"
+storageFile = "/etc/acme.json"
 # Entrypoint to proxy acme challenge/apply certificates to.
 # WARNING, must point to an entrypoint on port 443
 entryPoint = "https"

@@ -3,8 +3,8 @@ version: "3.3"
 services:
 
   traefik:
-    image: traefik:1.5.2
-    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    image: traefik:1.5.3
+    command: --web --docker --docker.domain=docker.localhost #--logLevel=DEBUG
     ports:
       - "80:80"
       - "8080:8080"
@@ -55,7 +55,7 @@ services:
       - traefik.enable=false
 
   spark-master:
-    image: dmitryzagr/spark-master:2.2.1-hadoop3.0.0-java8
+    image: dmitryzagr/spark-master:2.2.0-hadoop3.0.0-java8
     hostname: spark-master
     ports:
       - "8989:8080"
@@ -69,7 +69,7 @@ services:
       - traefik.enable=false
 
   spark-worker:
-    image: dmitryzagr/spark-worker:2.2.1-hadoop3.0.0-java8
+    image: dmitryzagr/spark-worker:2.2.0-hadoop3.0.0-java8
     environment:
       - "SPARK_MASTER=spark://spark-master:7077"
     env_file:
@@ -107,6 +107,10 @@ services:
   hive-metastore-postgresql:
     image: dmitryzagr/hive-metastore-postgresql:2.3.2-hadoop3.0.0-java8
     hostname: hive-metastore-postgresql
+    environment:
+      POSTGRESQL_PASSWORD: keycloak
+      POSTGRESQL_USER: keycloak
+      POSTGRESQL_DATABASE: keycloak
     volumes:
       - ./data/postgresql:/var/lib/postgresql/data
     labels:
@@ -130,4 +134,76 @@ services:
      - "traefik.frontend.rule=PathPrefix:/zeppelin"
      - "traefik.enable=true"
      - "traefik.port=8080"
-      
+
+  openldap:
+    image: dmitryzagr/openldap:1.1.9
+    entrypoint: /container/service/docker-entrypoint.sh
+    environment:
+      LDAP_LOG_LEVEL: "256"
+      LDAP_ORGANISATION: "1C"
+      LDAP_DOMAIN: "base.com"
+      LDAP_BASE_DN: "dc=base,dc=com"
+      LDAP_ADMIN_PASSWORD: "adminpassword"
+      LDAP_CONFIG_PASSWORD: "config"
+      LDAP_READONLY_USER: "false"
+      LDAP_RFC2307BIS_SCHEMA: "false"
+      LDAP_BACKEND: "hdb"
+      LDAP_TLS: "true"
+      LDAP_TLS_CRT_FILENAME: "ldap.crt"
+      LDAP_TLS_KEY_FILENAME: "ldap.key"
+      LDAP_TLS_CA_CRT_FILENAME: "ca.crt"
+      LDAP_TLS_ENFORCE: "false"
+      LDAP_TLS_CIPHER_SUITE: "SECURE256:-VERS-SSL3.0"
+      LDAP_TLS_PROTOCOL_MIN: "3.1"
+      LDAP_TLS_VERIFY_CLIENT: "demand"
+      LDAP_REPLICATION: "false"
+      KEEP_EXISTING_CONFIG: "false"
+      LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
+      LDAP_SSL_HELPER_PREFIX: "ldap"
+      #Cron expression to schedule OpenLDAP config backup. Set to "every 10 minutes"
+      LDAP_BACKUP_CONFIG_CRON_EXP: "*/10 * * * *"
+      #Cron expression to schedule OpenLDAP data backup. Set to "every 10 minutes"
+      LDAP_BACKUP_DATA_CRON_EXP: "*/10 * * * *"
+      #Backup TTL in days
+      LDAP_BACKUP_TTL: "15"
+      ADD_DEFAULT_NODES_TIMEOUT: "60"   #in seconds
+    stdin_open: true
+    volumes:
+      - ./data/openldap/var:/var/lib/ldap
+      - ./data/openldap/etc:/etc/ldap/slapd.d
+      - ./data/openldap/container:/container/service/slapd/assets/certs/
+      - ./data/openldap/backup:/data/backup
+    #domainname: "base.com" # important: same as hostname
+    #hostname: "base.com"
+    labels:
+      - "traefik.enable=false"
+
+  keycloak:
+    image: dmitryzagr/keycloak-openshift:3.4.0.Final
+    entrypoint:
+      - start-keycloak.sh
+      - -Dkeycloak.migration.action=import
+      - -Dkeycloak.migration.provider=dir
+      - -Dkeycloak.migration.strategy=IGNORE_EXISTING
+      - -Dkeycloak.migration.dir=/opt/jboss/keycloak/realms/
+      - -Djboss.bind.address=0.0.0.0
+    environment:
+      - POSTGRES_PORT_5432_TCP_ADDR=hive-metastore-postgresql
+      - POSTGRES_PORT_5432_TCP_PORT=5432
+      - POSTGRES_DATABASE=keycloak
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=keycloak
+      - PROXY_ADDRESS_FORWARDING=true
+      - CHE_REDIRECT_URIS="http://10.70.2.104/*"
+      - CHE_WEB_ORIGINS="http://10.70.2.104"
+      - LDAP_BASE_DN=dc=base,dc=com
+      - LDAP_PASSWORD=adminpassword
+    #volumes:
+      #- './data/keycloak:/opt/jboss/keycloak/standalone/data:rw'
+      #- './logs/keycloak:/opt/jboss/keycloak/standalone/log:rw'
+    labels:
+      - "traefik.backend=keycloak"
+      - "traefik.backend.loadbalancer.sticky=true"
+      - "traefik.frontend.rule=PathPrefix:/auth"
+      - "traefik.port=8080"
+      - "traefik.enable=true"
