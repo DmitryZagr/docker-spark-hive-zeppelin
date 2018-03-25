@@ -480,6 +480,8 @@ spec:
           value: "/zeppelin"
         - name: ZEPPELIN_PORT
           value: "8080"
+        - name: ZEPPELIN_WEBSOCKET_MAX_TEXT_MESSAGE_SIZE
+          value: "10240000"
         ports:
         - containerPort: 8080
           name: zeppelin
