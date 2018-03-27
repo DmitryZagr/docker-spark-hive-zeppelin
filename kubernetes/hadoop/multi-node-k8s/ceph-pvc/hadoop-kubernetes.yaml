@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
       - name: namenode
-        image: dmitryzagr/hadoop-namenode:hadoop3.0.0-java8
+        image: dmitryzagr/hadoop-namenode:hadoop3.0.1-java8
         env:
         envFrom:
           - configMapRef:
@@ -113,7 +113,7 @@ spec:
     spec:
       containers:
       - name: datanode
-        image: dmitryzagr/hadoop-datanode:hadoop3.0.0-java8
+        image: dmitryzagr/hadoop-datanode:hadoop3.0.1-java8
         env:
         envFrom:
           - configMapRef:
@@ -183,7 +183,7 @@ spec:
     spec:
       containers:
       - name: spark-master
-        image: dmitryzagr/spark-master:2.2.0-hadoop3.0.0-java8
+        image: dmitryzagr/spark-master:2.3.0-hadoop3.0.1-java8
         env:
         envFrom:
           - configMapRef:
@@ -237,7 +237,7 @@ spec:
         tier: spark-worker
     spec:
       containers:
-      - image: dmitryzagr/spark-worker:2.2.0-hadoop3.0.0-java8
+      - image: dmitryzagr/spark-worker:2.3.0-hadoop3.0.1-java8
         name: spark-worker
         env:
         envFrom:
@@ -290,7 +290,7 @@ spec:
     spec:
       containers:
       - name: hive-server
-        image: dmitryzagr/hadoop-hive:2.3.2-hadoop3.0.0-java8
+        image: dmitryzagr/hadoop-hive:2.3.2-hadoop3.0.1-java8
         env:
         envFrom:
           - configMapRef:
@@ -344,7 +344,7 @@ spec:
         tier: hive-metastore
     spec:
       containers:
-      - image: dmitryzagr/hadoop-hive:2.3.2-hadoop3.0.0-java8
+      - image: dmitryzagr/hadoop-hive:2.3.2-hadoop3.0.1-java8
         name: hive-metastore
         command: ["/opt/hive/bin/hive"]
         args: ["--service", "metastore"]
@@ -395,7 +395,7 @@ spec:
         tier: hive-postgresql
     spec:
       containers:
-      - image: dmitryzagr/hive-metastore-postgresql:2.3.2-hadoop3.0.0-java8
+      - image: dmitryzagr/hive-metastore-postgresql:2.3.2
         name: hive-postgresql
         env:
         envFrom:
@@ -465,7 +465,7 @@ spec:
         tier: zeppelin-ui
     spec:
       containers:
-      - image: dmitryzagr/zeppelin:0.7.3-hadoop3.0.0
+      - image: dmitryzagr/zeppelin:0.8.0-SNAPSHOT
         name: zeppelin-ui
         env:
         envFrom:
