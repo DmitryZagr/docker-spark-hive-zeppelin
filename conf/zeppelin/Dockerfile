@@ -81,5 +81,10 @@ RUN apt-get update \
 
 ENV SPARK_HOME /zeppelin/spark
 
+RUN rm -r /opt/conda && wget https://repo.continuum.io/archive/Anaconda3-5.1.0-Linux-x86_64.sh && \
+      /bin/bash Anaconda3-5.1.0-Linux-x86_64.sh -b -p /opt/conda && \
+      conda update -y  -n base conda && conda install -y grpcio jupyter && \
+      rm Anaconda3-5.1.0-Linux-x86_64.sh
+
 COPY conf/zeppelin-site.xml /zeppelin/conf/zeppelin-site.xml
 COPY interpreter.json /zeppelin/conf/interpreter.json
