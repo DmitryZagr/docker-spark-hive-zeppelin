@@ -488,19 +488,25 @@ spec:
         volumeMounts:
         - name: zeppelin-ui-data
           mountPath: /data-zeppelin
-        - name: zeppelin-conf
-          mountPath: /zeppelin/conf
+        - name: zeppelin-conf-shiro
+          mountPath: /zeppelin/conf/shiro.ini
+          subPath: shiro.ini
+        - name: zeppelin-conf-interpreter
+          mountPath: /zeppelin/conf/interpreter.json
+          subPath: interpreter.json
+        - name: zeppelin-conf-site
+          mountPath: /zeppelin/conf/zeppelin-site.xml
+          subPath: zeppelin-site.xml
       volumes:
-      - name: zeppelin-conf
+      - name: zeppelin-conf-shiro
         secret:
-          secretName: zeppelin-conf
-          items:
-          - key: shiro.ini
-            path: shiro.ini
-          - key: interpreter.json
-            path: interpreter.json
-          - key: zeppelin-site.xml
-            path: zeppelin-site.xml
+          secretName: zeppelin-conf-shiro
+      - name: zeppelin-conf-interpreter
+        secret:
+          secretName: zeppelin-conf-interpreter
+      - name: zeppelin-conf-site
+        secret:
+          secretName: zeppelin-conf-site
       nodeSelector:
         server-type: namenode
   volumeClaimTemplates:
