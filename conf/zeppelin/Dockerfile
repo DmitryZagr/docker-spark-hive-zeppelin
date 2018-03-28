@@ -74,10 +74,10 @@ ADD conf/hadoop/core-site.xml /opt/hadoop-$HADOOP_VERSION/etc/hadoop/core-site.x
 
 RUN apt-get update \
       && apt-get install -y wget \
-      && wget http://apache-mirror.rbc.ru/pub/apache/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz \
-      && tar -xvzf spark-2.3.0-bin-hadoop2.7.tgz \
-      && mv spark-2.3.0-bin-hadoop2.7 spark \
-      && rm spark-2.3.0-bin-hadoop2.7.tgz
+      && wget http://apache-mirror.rbc.ru/pub/apache/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.7.tgz \
+      && tar -xvzf spark-2.2.0-bin-hadoop2.7.tgz \
+      && mv spark-2.2.0-bin-hadoop2.7 spark \
+      && rm spark-2.2.0-bin-hadoop2.7.tgz
 
 ENV SPARK_HOME /zeppelin/spark
 
