@@ -117,7 +117,7 @@ services:
       - traefik.enable=false
 
   zeppelin:
-    image: dmitryzagr/zeppelin:0.7.3-hadoop3.0.0
+    image: dmitryzagr/zeppelin:0.7.3-hadoop3.0.1-anaconda3
     environment:
       - ZEPPELIN_LOG_DIR=/logs
       - ZEPPELIN_NOTEBOOK_DIR=/notebook
