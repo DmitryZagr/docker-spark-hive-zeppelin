@@ -183,7 +183,7 @@ spec:
     spec:
       containers:
       - name: spark-master
-        image: dmitryzagr/spark-master:2.3.0-hadoop3.0.1-java8
+        image: dmitryzagr/spark-master:2.2.0-hadoop3.0.0-java8
         env:
         envFrom:
           - configMapRef:
@@ -237,7 +237,7 @@ spec:
         tier: spark-worker
     spec:
       containers:
-      - image: dmitryzagr/spark-worker:2.3.0-hadoop3.0.1-java8
+      - image: dmitryzagr/spark-worker:2.2.0-hadoop3.0.0-java8
         name: spark-worker
         env:
         envFrom:
@@ -465,7 +465,7 @@ spec:
         tier: zeppelin-ui
     spec:
       containers:
-      - image: dmitryzagr/zeppelin:0.8.0-SNAPSHOT
+      - image: dmitryzagr/zeppelin:0.8.0-SNAPSHOT-spark2.2.0-hadoop3.0.1
         name: zeppelin-ui
         env:
         envFrom:
