@@ -491,9 +491,6 @@ spec:
         - name: zeppelin-conf-shiro
           mountPath: /zeppelin/conf/shiro.ini
           subPath: shiro.ini
-        - name: zeppelin-conf-interpreter
-          mountPath: /zeppelin/conf/interpreter.json
-          subPath: interpreter.json
         - name: zeppelin-conf-site
           mountPath: /zeppelin/conf/zeppelin-site.xml
           subPath: zeppelin-site.xml
@@ -501,9 +498,6 @@ spec:
       - name: zeppelin-conf-shiro
         secret:
           secretName: zeppelin-conf-shiro
-      - name: zeppelin-conf-interpreter
-        secret:
-          secretName: zeppelin-conf-interpreter
       - name: zeppelin-conf-site
         secret:
           secretName: zeppelin-conf-site
