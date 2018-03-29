@@ -1,0 +1,213 @@
+---
+########################
+# TRAEFIK
+########################
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hadoop-statefull-k8s
+  namespace: cephfs
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.rule.type: PathPrefix
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /auth
+        backend:
+          serviceName: keycloak
+          servicePort: http
+
+---
+########################
+# OPENLDAP
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: openldap
+  namespace: cephfs
+  labels:
+    app: che
+spec:
+  ports:
+    - port: 389
+      targetPort: 389
+      name: openldap
+  selector:
+    app: che
+    tier: openldap
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: openldap
+  namespace: cephfs
+  labels:
+    app: che
+spec:
+  selector:
+    matchLabels:
+      app: che
+      tier: openldap
+  serviceName: openldap
+  template:
+    metadata:
+      labels:
+        app: che
+        tier: openldap
+    spec:
+      containers:
+      - image: dmitryzagr/openldap:1.1.9
+        name: openldap
+        command: ["/container/service/docker-entrypoint.sh"]
+        env:
+        - name: LDAP_LOG_LEVEL
+          value: "256"
+        - name: LDAP_ORGANISATION
+          value: "1C"
+        - name: LDAP_DOMAIN
+          value: "base.com"
+        - name: LDAP_BASE_DN
+          value: "dc=base,dc=com"
+        - name: LDAP_ADMIN_PASSWORD
+          value: "adminpassword"
+        - name: LDAP_CONFIG_PASSWORD
+          value: "config"
+        - name: LDAP_READONLY_USER
+          value: "false"
+        - name: LDAP_RFC2307BIS_SCHEMA
+          value: "false"
+        - name: LDAP_BACKEND
+          value: "hdb"
+        - name: LDAP_TLS
+          value: "true"
+        - name: LDAP_TLS_CRT_FILENAME
+          value: "ldap.crt"
+        - name: LDAP_TLS_KEY_FILENAME
+          value: "ldap.key"
+        - name: LDAP_TLS_CA_CRT_FILENAME
+          value: "ca.crt"
+        - name: LDAP_TLS_ENFORCE
+          value: "false"
+        - name: LDAP_TLS_CIPHER_SUITE
+          value: "SECURE256:-VERS-SSL3.0"
+        - name: LDAP_TLS_PROTOCOL_MIN
+          value: "3.1"
+        - name: LDAP_TLS_VERIFY_CLIENT
+          value: "demand"
+        - name: LDAP_REPLICATION
+          value: "false"
+        - name: KEEP_EXISTING_CONFIG
+          value: "false"
+        - name: LDAP_REMOVE_CONFIG_AFTER_SETUP
+          value: "true"
+        - name: LDAP_SSL_HELPER_PREFIX
+          value: "ldap"
+        - name: LDAP_BACKUP_CONFIG_CRON_EXP
+          value: "*/50 * * * *"
+        - name: LDAP_BACKUP_DATA_CRON_EXP
+          value: "*/50 * * * *"
+        - name: LDAP_BACKUP_TTL
+          value: "1"
+        - name: ADD_DEFAULT_NODES_TIMEOUT
+          value: "60"
+        ports:
+        - containerPort: 389
+          name: openldap
+        volumeMounts:
+        - name: openldap-ldap-data
+          mountPath: /var/lib/ldap
+          subPath: openldap/ldap
+        - name: openldap-ldap-data
+          mountPath: /etc/ldap/slapd.d
+          subPath: openldap/slapd.d
+        - name: openldap-ldap-data
+          mountPath: /container/service/slapd/assets/certs
+          subPath: openldap/certs
+        - name: openldap-ldap-data
+          mountPath: /data/backup
+          subPath: openldap/backup
+      nodeSelector:
+        server-type: namenode
+  volumeClaimTemplates:
+  - metadata:
+      name: openldap-ldap-data
+    spec:
+      storageClassName: cephfs
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi
+---
+########################
+# KEYCLOAK
+########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  namespace: cephfs
+  labels:
+    app: che
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: http
+  selector:
+    app: che
+    tier: keycloak
+---
+apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: cephfs
+  labels:
+    app: che
+spec:
+  selector:
+    matchLabels:
+      app: che
+      tier: keycloak
+  template:
+    metadata:
+      labels:
+        app: che
+        tier: keycloak
+    spec:
+      containers:
+      - image: dmitryzagr/keycloak-openshift:3.4.0.Final
+        name: keycloak
+        command: ["start-keycloak.sh"]
+        args: ["-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=dir", "-Dkeycloak.migration.strategy=IGNORE_EXISTING", "-Dkeycloak.migration.dir=/opt/jboss/keycloak/realms/", "-Djboss.bind.address=0.0.0.0"]
+        env:
+        - name: POSTGRES_PORT_5432_TCP_ADDR
+          value: "hive-postgresql"
+        - name: POSTGRES_PORT_5432_TCP_PORT
+          value: "5432"
+        - name: POSTGRES_DATABASE
+          value: "keycloak"
+        - name: POSTGRES_USER
+          value: "keycloak"
+        - name: POSTGRES_PASSWORD
+          value: "keycloak"
+        - name: PROXY_ADDRESS_FORWARDING
+          value: "true"
+        - name: CHE_REDIRECT_URIS
+          value: '"*"'
+        - name: CHE_WEB_ORIGINS
+          value: '"*"'
+        - name: LDAP_BASE_DN
+          value: "dc=base,dc=com"
+        - name: LDAP_PASSWORD
+          value: "adminpassword"
+        ports:
+        - containerPort: 8080
+          name: http
+      nodeSelector:
+        server-type: namenode
+---
