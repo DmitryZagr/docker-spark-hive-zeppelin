@@ -482,6 +482,10 @@ spec:
           value: "8080"
         - name: ZEPPELIN_WEBSOCKET_MAX_TEXT_MESSAGE_SIZE
           value: "10240000"
+        - name: ZEPPELIN_MEM
+          value: "-Xms8192m -Xmx8192m -XX:MaxPermSize=4096m"
+        - name: ZEPPELIN_INTP_MEM
+          value: "-Xms4096m -Xmx4096m -XX:MaxPermSize=4096m"
         ports:
         - containerPort: 8080
           name: zeppelin
