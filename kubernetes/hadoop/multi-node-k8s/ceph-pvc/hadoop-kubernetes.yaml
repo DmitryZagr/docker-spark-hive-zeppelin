@@ -227,7 +227,7 @@ spec:
     matchLabels:
       app: hadoop
       tier: spark-worker
-  replicas: 5
+  replicas: 6
   strategy:
     type: Recreate
   template:
