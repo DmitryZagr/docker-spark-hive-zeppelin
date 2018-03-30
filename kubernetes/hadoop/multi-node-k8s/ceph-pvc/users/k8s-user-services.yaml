@@ -117,6 +117,7 @@ spec:
         ports:
         - containerPort: 389
           name: openldap
+          hostPort: 389
         volumeMounts:
         - name: openldap-ldap-data
           mountPath: /var/lib/ldap
