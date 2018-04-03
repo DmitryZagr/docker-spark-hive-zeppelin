@@ -55,7 +55,7 @@ spec:
         - name: nifi-data-out
           mountPath: /data_out
         - name: nifi-conf
-          mountPath: /opt/nifi/conf
+          mountPath: /opt/nifi/nifi-1.5.0/conf
         - name: nifi-config-hadoop-core-site
           mountPath: /etc/hadoop/conf/core-site.xml
           subPath: core-site.xml
