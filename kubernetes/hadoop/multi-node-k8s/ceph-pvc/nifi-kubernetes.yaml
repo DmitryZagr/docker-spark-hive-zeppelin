@@ -78,9 +78,9 @@ spec:
       - name: nifi-config-hadoop-core-site
         secret:
           secretName: nifi-config-hadoop-core-site
-      - name: nifi-config-hadoop-core-site
+      - name: nifi-config-hadoop-hdfs-site
         secret:
-          secretName: nifi-config-hadoop-core-site
+          secretName: nifi-config-hadoop-hdfs-site
       nodeSelector:
         server-type: nifi
   volumeClaimTemplates:
