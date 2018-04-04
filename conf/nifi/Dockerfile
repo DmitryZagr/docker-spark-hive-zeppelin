@@ -1,8 +1,7 @@
 FROM apache/nifi:latest
 
-
 USER root
 
-RUN chown -R root:root ${NIFI_BASE_DIR}
+RUN apt-get update && apt-get install -y sudo && echo "nifi   ALL = NOPASSWD: ALL" >> /etc/sudoers && usermod -u 0 -g 0 -o nifi
 
-COPY hadoop /tmp/tmp
+USER nifi

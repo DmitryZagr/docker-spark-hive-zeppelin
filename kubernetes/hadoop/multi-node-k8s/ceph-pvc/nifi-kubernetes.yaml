@@ -39,7 +39,7 @@ spec:
     spec:
       containers:
       - name: nifi
-        image: apache/nifi:latest
+        image: dmitryzagr/nifi:latest
         env:
         - name: NIFI_WEB_HTTP_PORT
           value: "8181"

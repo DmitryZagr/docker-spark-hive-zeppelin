@@ -9,6 +9,6 @@ push-keycloack:
 	docker push dmitryzagr/keycloak-openshift:3.4.0.Final
 
 build-nifi:
-	docker build -t dmitryzagr/nifi:latest conf/nifi
+	docker build --no-cache -t dmitryzagr/nifi:latest conf/nifi
 push-nifi:
 	docker push dmitryzagr/nifi:latest
