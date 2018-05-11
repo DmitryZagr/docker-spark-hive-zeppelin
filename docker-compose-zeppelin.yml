@@ -1,0 +1,50 @@
+version: "3.3"
+
+services:
+
+  traefik:
+    image: traefik:1.5.4
+    command: --web --docker --docker.domain=docker.localhost #--logLevel=DEBUG
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./conf/traefik/traefik.toml:/etc/traefik/traefik.toml:ro
+      - /storage/data/traefik/acme:/etc/traefik/acme
+    labels:
+      - traefik.enable=false
+
+  postgres:
+    image: postgres:9.6
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+#      - ./init:/docker-entrypoint-initdb.d
+      - "/storage/data/postgres:/var/lib/postgresql/data"
+    labels:
+      - traefik.enable=false
+
+  zeppelin:
+    image: dmitryzagr/zeppelin:0.8.0-SNAPSHOT-spark2.2.0-hadoop3.0.1
+    environment:
+      - ZEPPELIN_LOG_DIR=/logs
+      - ZEPPELIN_NOTEBOOK_DIR=/notebook
+      - ZEPPELIN_SERVER_CONTEXT_PATH=/zeppelin
+    volumes:
+      - ./conf/zeppelin/interpreter.json:/zeppelin/conf/interpreter.json
+      - ./conf/zeppelin/conf/shiro.ini:/zeppelin/conf/shiro.ini
+      - ./conf/zeppelin/conf/zeppelin-site.xml:/zeppelin/conf/zeppelin-site.xml
+      - /storage/data/zeppelin/logs:/logs
+      - /storage/data/zeppelin/notebook:/notebook
+    labels:
+     - "traefik.backend=zeppelin"
+     - "traefik.backend.loadbalancer.sticky=true"
+     - "traefik.frontend.rule=PathPrefix:/zeppelin"
+     - "traefik.enable=true"
+     - "traefik.port=8080"
