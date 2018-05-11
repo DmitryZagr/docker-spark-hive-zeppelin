@@ -25,8 +25,8 @@ address = ":8080"
   # http should be redirected to https
   [entryPoints.http]
   address = ":80"
-    [entryPoints.http.redirect]
-    entryPoint = "https"
+    # [entryPoints.http.redirect]
+    # entryPoint = "https"
   # https is the default
   [entryPoints.https]
   address = ":443"
