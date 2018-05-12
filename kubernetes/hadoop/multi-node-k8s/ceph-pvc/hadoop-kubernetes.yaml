@@ -493,6 +493,12 @@ spec:
         volumeMounts:
         - name: zeppelin-ui-data
           mountPath: /data-zeppelin
+        - name: zeppelin-ui-data
+          mountPath: /zeppelin/input-data
+          subPath: input-data
+        - name: zeppelin-ui-data
+          mountPath: /zeppelin/conf
+          subPath: zeppelin-conf
         - name: zeppelin-conf-shiro
           mountPath: /zeppelin/conf/shiro.ini
           subPath: shiro.ini
