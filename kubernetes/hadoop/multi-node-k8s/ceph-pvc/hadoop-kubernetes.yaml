@@ -466,7 +466,7 @@ spec:
         tier: zeppelin-ui
     spec:
       containers:
-      - image: dmitryzagr/zeppelin-test:0.8.0-SNAPSHOT-spark2.2.0-hadoop3.0.1
+      - image: dmitryzagr/zeppelin:0.8.0-rc1-v2-spark2.2.0-hadoop3.0.2
         name: zeppelin-ui
         env:
         envFrom:
