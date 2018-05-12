@@ -466,7 +466,7 @@ spec:
         tier: zeppelin-ui
     spec:
       containers:
-      - image: dmitryzagr/zeppelin:0.8.0-SNAPSHOT-spark2.2.0-hadoop3.0.1
+      - image: dmitryzagr/zeppelin-test:0.8.0-SNAPSHOT-spark2.2.0-hadoop3.0.1
         name: zeppelin-ui
         env:
         envFrom:
@@ -484,9 +484,9 @@ spec:
         - name: ZEPPELIN_WEBSOCKET_MAX_TEXT_MESSAGE_SIZE
           value: "10240000"
         - name: ZEPPELIN_MEM
-          value: "-Xms8192m -Xmx8192m -XX:MaxPermSize=4096m"
+          value: "-Xms16384m -Xmx16384m -XX:MaxPermSize=4096m"
         - name: ZEPPELIN_INTP_MEM
-          value: "-Xms4096m -Xmx4096m -XX:MaxPermSize=4096m"
+          value: "-Xms16384m -Xmx16384m -XX:MaxPermSize=4096m"
         ports:
         - containerPort: 8080
           name: zeppelin
@@ -507,7 +507,7 @@ spec:
         secret:
           secretName: zeppelin-conf-site
       nodeSelector:
-        server-type: namenode
+        server-type: datanode
   volumeClaimTemplates:
   - metadata:
       name: zeppelin-ui-data
@@ -542,3 +542,4 @@ spec:
           serviceName: spark-master
           servicePort: spark-master-ui
 ---
+
