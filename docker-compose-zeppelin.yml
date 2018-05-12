@@ -31,11 +31,15 @@ services:
       - traefik.enable=false
 
   zeppelin:
-    image: dmitryzagr/zeppelin:0.8.0-SNAPSHOT-spark2.2.0-hadoop3.0.1
+    image: dmitryzagr/zeppelin:0.8.0-rc1-v2-spark2.2.0-hadoop3.0.2
+    restart: always
     environment:
       - ZEPPELIN_LOG_DIR=/logs
       - ZEPPELIN_NOTEBOOK_DIR=/notebook
       - ZEPPELIN_SERVER_CONTEXT_PATH=/zeppelin
+      - ZEPPELIN_WEBSOCKET_MAX_TEXT_MESSAGE_SIZE=10240000
+      - ZEPPELIN_MEM=-Xmx8192m -Xms8192m -XX:MaxPermSize=4096m
+      - ZEPPELIN_INTP_MEM=-Xmx4096m -Xms4096m -XX:MaxPermSize=4096m
     ports:
       - 80:8080
     volumes:
