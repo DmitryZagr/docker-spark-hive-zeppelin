@@ -487,6 +487,8 @@ spec:
           value: "-Xms16384m -Xmx16384m -XX:MaxPermSize=4096m"
         - name: ZEPPELIN_INTP_MEM
           value: "-Xms16384m -Xmx16384m -XX:MaxPermSize=4096m"
+        - name: ZEPPELIN_NOTEBOOK_PUBLIC
+          value: "true"
         ports:
         - containerPort: 8080
           name: zeppelin
