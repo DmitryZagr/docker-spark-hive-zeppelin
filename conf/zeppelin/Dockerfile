@@ -1,8 +1,8 @@
-FROM apache/zeppelin:0.7.3
+FROM apache/zeppelin:0.8.0
 
-RUN rm -r /zeppelin && mkdir /zeppelin
+#RUN rm -r /zeppelin && mkdir /zeppelin
 
-COPY zeppelin-0.8.0-SNAPSHOT /zeppelin
+#COPY zeppelin-0.8.0-SNAPSHOT /zeppelin
 
 RUN chmod +x /zeppelin/bin/*
 
@@ -74,7 +74,7 @@ ADD conf/hadoop/core-site.xml /opt/hadoop-$HADOOP_VERSION/etc/hadoop/core-site.x
 
 RUN apt-get update \
       && apt-get install -y wget \
-      && wget http://apache-mirror.rbc.ru/pub/apache/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.7.tgz \
+      && wget https://archive.apache.org/dist/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.7.tgz \
       && tar -xvzf spark-2.2.0-bin-hadoop2.7.tgz \
       && mv spark-2.2.0-bin-hadoop2.7 spark \
       && rm spark-2.2.0-bin-hadoop2.7.tgz

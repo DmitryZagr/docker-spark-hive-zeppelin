@@ -117,7 +117,7 @@ services:
       - traefik.enable=false
 
   zeppelin:
-    image: dmitryzagr/zeppelin:0.8.0-SNAPSHOT-spark2.2.0-hadoop3.0.1
+    image: dmitryzagr/zeppelin:0.8.0-v1-spark2.2.0-hadoop3.0.3
     environment:
       - ZEPPELIN_LOG_DIR=/logs
       - ZEPPELIN_NOTEBOOK_DIR=/notebook
