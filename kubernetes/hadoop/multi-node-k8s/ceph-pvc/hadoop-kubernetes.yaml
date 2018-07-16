@@ -466,7 +466,7 @@ spec:
         tier: zeppelin-ui
     spec:
       containers:
-      - image: dmitryzagr/zeppelin:0.8.0-rc4-v1-spark2.2.0-hadoop3.0.3
+      - image: dmitryzagr/zeppelin:0.8.0-v1-spark2.2.0-hadoop3.0.3
         name: zeppelin-ui
         env:
         envFrom:
@@ -504,6 +504,9 @@ spec:
         - name: zeppelin-conf-shiro
           mountPath: /zeppelin/conf/shiro.ini
           subPath: shiro.ini
+        - name: zeppelin-log4j-prop
+          mountPath: /zeppelin/conf/log4j.properties
+          subPath: log4j.properties
         - name: zeppelin-conf-site
           mountPath: /zeppelin/conf/zeppelin-site.xml
           subPath: zeppelin-site.xml
@@ -514,6 +517,9 @@ spec:
       - name: zeppelin-conf-site
         secret:
           secretName: zeppelin-conf-site
+      - name: zeppelin-log4j-prop
+        secret:
+          secretName: zeppelin-log4j-prop
       nodeSelector:
         server-type: datanode
   volumeClaimTemplates:
