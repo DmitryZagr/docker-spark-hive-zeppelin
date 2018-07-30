@@ -16,18 +16,34 @@ logLevel = "ERROR"
 # Each frontend can specify its own entrypoints.
 defaultEntryPoints = ["http", "https"]
 
-[web]
-# Port for the status page
-address = ":8080"
+[api]
+  # Name of the related entry point
+  #
+  # Optional
+  # Default: "traefik"
+  #
+  entryPoint = "traefik"
+
+  # Enabled Dashboard
+  #
+  # Optional
+  # Default: true
+  #
+  dashboard = true
+
+  # Enable debug mode.
+  # This will install HTTP handlers to expose Go expvars under /debug/vars and
+  # pprof profiling data under /debug/pprof/.
+  # Additionally, the log level will be set to DEBUG.
+  #
+  # Optional
+  # Default: false
 
 # Entrypoints, http and https
 [entryPoints]
   # http should be redirected to https
   [entryPoints.http]
   address = ":80"
-    [entryPoints.http.redirect]
-    entryPoint = "https"
-  # https is the default
   [entryPoints.https]
   address = ":443"
     [entryPoints.https.tls]
@@ -44,7 +60,7 @@ email = "test@traefik.io"
 #  - mount the folder containing the file as a volume
 #      storageFile = "/etc/traefik/acme/acme.json"
 #      $ docker run -v "/my/host/acme:/etc/traefik/acme" traefik
-storageFile = "/etc/acme.json"
+storageFile = "/etc/traefik/acme/acme.json"
 # Entrypoint to proxy acme challenge/apply certificates to.
 # WARNING, must point to an entrypoint on port 443
 entryPoint = "https"
@@ -61,17 +77,4 @@ onDemand = false
 OnHostRule = true
 
 
-# Enable Docker configuration backend
-#[docker]
-# Docker server endpoint. Can be a tcp or a unix socket endpoint.
-#endpoint = "unix:///var/run/docker.sock"
-# Default domain used.
-# Can be overridden by setting the "traefik.domain" label on a container.
-#domain = "example.com"
-# Enable watch docker changes
-#watch = true
-# Expose containers by default in traefik
-# If set to false, containers that don't have `traefik.enable=true` will be ignored
-#exposedbydefault = false
-#swarmmode = true
 
