@@ -16,9 +16,30 @@ logLevel = "ERROR"
 # Each frontend can specify its own entrypoints.
 defaultEntryPoints = ["http", "https"]
 
-[web]
-# Port for the status page
-address = ":8080"
+[api]
+  # Name of the related entry point
+  #
+  # Optional
+  # Default: "traefik"
+  #
+  entryPoint = "traefik"
+
+  # Enabled Dashboard
+  #
+  # Optional
+  # Default: true
+  #
+  dashboard = true
+
+  # Enable debug mode.
+  # This will install HTTP handlers to expose Go expvars under /debug/vars and
+  # pprof profiling data under /debug/pprof/.
+  # Additionally, the log level will be set to DEBUG.
+  #
+  # Optional
+  # Default: false
+  #
+  debug = true
 
 # Entrypoints, http and https
 [entryPoints]
