@@ -84,7 +84,7 @@ spec:
           privileged: true
         args:
         - -d
-        - --web
+        - --api
         - --kubernetes
       volumes:
       - name: traefik-conf
