@@ -18,7 +18,7 @@ services:
       - traefik.enable=false
 
   namenode:
-    image: dmitryzagr/hadoop-namenode:hadoop3.0.1-java8
+    image: dmitryzagr/hadoop-namenode:hadoop3.1.0-java8
     restart: always
     hostname: namenode
     ports:
@@ -33,7 +33,7 @@ services:
       - traefik.enable=false
 
   datanode_1:
-    image: dmitryzagr/hadoop-datanode:hadoop3.0.1-java8
+    image: dmitryzagr/hadoop-datanode:hadoop3.1.0-java8
     restart: always
     volumes:
       - ./data/datanode_1:/hadoop/dfs/data
@@ -46,7 +46,7 @@ services:
       - traefik.enable=false
 
   datanode_2:
-    image: dmitryzagr/hadoop-datanode:hadoop3.0.1-java8
+    image: dmitryzagr/hadoop-datanode:hadoop3.1.0-java8
     restart: always
     volumes:
       - ./data/datanode_2:/hadoop/dfs/data
@@ -59,13 +59,13 @@ services:
       - traefik.enable=false
 
   spark-master:
-    image: dmitryzagr/spark-master:2.2.0-hadoop3.0.0-java8
+    image: dmitryzagr/spark-master:2.2.2-hadoop3.1.0-java8
     restart: always
     hostname: spark-master
     ports:
       - "8989:8080"
     volumes:
-      - ./conf/zeppelin/conf/hadoop/core-site.xml:/opt/hadoop-3.0.1/etc/hadoop/core-site.xml:ro
+      - ./conf/zeppelin/conf/hadoop/core-site.xml:/opt/hadoop-3.1.0/etc/hadoop/core-site.xml:ro
     env_file:
       - ./hadoop-hive.env
     depends_on:
@@ -74,7 +74,7 @@ services:
       - traefik.enable=false
 
   spark-worker:
-    image: dmitryzagr/spark-worker:2.2.0-hadoop3.0.0-java8
+    image: dmitryzagr/spark-worker:2.2.2-hadoop3.1.0-java8
     restart: always
     environment:
       - "SPARK_MASTER=spark://spark-master:7077"
@@ -82,12 +82,12 @@ services:
       - ./hadoop-hive.env
       - ./spark.env
     volumes:
-      - ./conf/zeppelin/conf/hadoop/core-site.xml:/opt/hadoop-3.0.1/etc/hadoop/core-site.xml:ro
+      - ./conf/zeppelin/conf/hadoop/core-site.xml:/opt/hadoop-3.1.0/etc/hadoop/core-site.xml:ro
     labels:
       - traefik.enable=false
 
   hive-server:
-    image: dmitryzagr/hadoop-hive:2.3.2-hadoop3.0.1-java8
+    image: dmitryzagr/hadoop-hive:2.3.3-hadoop3.1.0-java8
     restart: always
     hostname: hive-server
     env_file:
@@ -101,7 +101,7 @@ services:
       - traefik.enable=false
 
   hive-metastore:
-    image: dmitryzagr/hadoop-hive:2.3.2-hadoop3.0.1-java8
+    image: dmitryzagr/hadoop-hive:2.3.3-hadoop3.1.0-java8
     restart: always
     hostname: hive-metastore
     env_file:
@@ -126,7 +126,7 @@ services:
       - traefik.enable=false
 
   zeppelin:
-    image: dmitryzagr/zeppelin:0.8.0-v1-spark2.2.0-hadoop3.0.3
+    image: dmitryzagr/zeppelin:0.8.0-v1-spark2.2.2-hadoop3.1.0
     restart: always
     environment:
       - ZEPPELIN_LOG_DIR=/logs

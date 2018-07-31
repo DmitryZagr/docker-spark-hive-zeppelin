@@ -2,10 +2,10 @@
 
 ## Components
 
-  - Spark v.2.3.0
-  - Hive v.2.3.2
+  - Spark v.2.2.2
+  - Hive v.2.3.3
   - Zeppelin v.0.8.0
-  - Hadoop 3.0.1
+  - Hadoop 3.1.0
   - Traefik 1.6.5
 
 ## Supported infrastructures
