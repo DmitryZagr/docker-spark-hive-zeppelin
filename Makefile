@@ -1,7 +1,7 @@
 build-zeppelin:
-	docker build -t dmitryzagr/zeppelin:0.8.0-v1-spark2.2.2-hadoop3.1.0 conf/zeppelin
+	docker build -t dmitryzagr/zeppelin:0.8.0-v1-spark2.2.2-hadoop3.1.1 conf/zeppelin
 push-zeppelin:
-	docker push dmitryzagr/zeppelin:0.8.0-v1-spark2.2.2-hadoop3.1.0
+	docker push dmitryzagr/zeppelin:0.8.0-v1-spark2.2.2-hadoop3.1.1
 
 build-keycloack:
 	docker build --no-cache -t dmitryzagr/keycloak-openshift:3.4.0.Final conf/keycloak
