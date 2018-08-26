@@ -39,12 +39,10 @@ spec:
     spec:
       containers:
       - name: nifi
-        image: dmitryzagr/nifi:latest
+        image: apache/nifi:1.7.1
         env:
         - name: NIFI_WEB_HTTP_PORT
           value: "8181"
-        - name: NIFI_WEB_HTTP_HOST
-          value: "nifi-0"
         ports:
         - containerPort: 8181
           name: nifi
@@ -55,7 +53,7 @@ spec:
         - name: nifi-data-out
           mountPath: /data_out
         - name: nifi-conf
-          mountPath: /opt/nifi/nifi-1.5.0/conf
+          mountPath: /opt/nifi/nifi-1.7.1/conf
         - name: nifi-config-hadoop-core-site
           mountPath: /etc/hadoop/conf/core-site.xml
           subPath: core-site.xml
@@ -82,6 +80,6 @@ spec:
         secret:
           secretName: nifi-config-hadoop-hdfs-site
       nodeSelector:
-        server-type: nifi
+        server-type: datanode
   volumeClaimTemplates:
 ---
