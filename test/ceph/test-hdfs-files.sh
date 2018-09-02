@@ -1,7 +1,7 @@
 #!/bin/bash
 
 test_file=test_file
-sleep_flag=0
+sleep_flag=1
 sleep_def_time=1m
 
 execute_dd_command() {
@@ -57,7 +57,7 @@ dd_test 128 MB count=512 oflag=dsync #64G
 execute_sleep $sleep_flag $sleep_def_time
 
 dd_test 128 MB count=1024 oflag=dsync #128G
-execute_sleep $sleep_flag $sleep_def_time.
+execute_sleep $sleep_flag $sleep_def_time
 
 dd_test 128 MB count=2048 oflag=dsync #512G
 execute_sleep $sleep_flag $sleep_def_time
